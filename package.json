@@ -1,0 +1,21 @@
+{
+  "name": "e2e-shoutlyapp",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {},
+  "repository": {
+    "type": "git",
+    "url": "git+https://kevin_shoutly@bitbucket.org/shoutlytech/e2e-shoutlyapp.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://bitbucket.org/shoutlytech/e2e-shoutlyapp/issues"
+  },
+  "homepage": "https://bitbucket.org/shoutlytech/e2e-shoutlyapp#readme",
+  "devDependencies": {
+    "@playwright/test": "^1.22.2"
+  }
+}
