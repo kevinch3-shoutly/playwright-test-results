@@ -49,8 +49,8 @@ export class CollaborationsPage {
     await page.locator('[formcontrolname="frequency"]').click()
 
     // Click Frequency dropdown
-    await page.locator(`[ng-reflect-value="${frequency}"]`).click()
-
+    await page.locator(`.mat-option-text:has-text("${frequency}")`).click()
+    
     // Set formcontrolname="postpaid" value
     await page.locator('[formcontrolname="postpaid"]').fill(randNumber.toString())
 
@@ -87,6 +87,7 @@ export class CollaborationsPage {
     const page = this.page
     const baseURL = this.baseURL
     const organization = getOrganizationFromAuthState(baseURL)
+    const frequency = 'once'
 
     const randNumber = await new GenerateRandomString().generateRandomNumber()
 
@@ -161,8 +162,8 @@ export class CollaborationsPage {
     // Click Frequency dropdown
     await page.locator('[formcontrolname="frequency"]').click()
 
-    // Click text=Pay hourly
-    await page.locator('text=Pay hourly').click()
+    // Click Frequency dropdown
+    await page.locator(`.mat-option-text:has-text("${frequency}")`).click()
 
     // Set formcontrolname="postpaid" value
     await page.locator('[formcontrolname="postpaid"]').fill(randNumber.toString())
@@ -170,20 +171,18 @@ export class CollaborationsPage {
     // IF frequency === 'once' set formcontrolname="upfront" value
     // await page.locator('[formcontrolname="upfront"]').fill(randNumber)
     
-    // IF organization is employer
-    if (organization.type === 'employer') {
-        // click payout day mat-select
-        await page.locator('[aria-label="Open calendar"]').nth(2).click()
-        // Click last day available of the current month
-        await page.locator('button:not(.mat-calendar-body-disabled) > .mat-calendar-body-cell-content').last().click()
+    if(frequency === 'once'){
+      // click payout day mat-select
+      await page.locator('[aria-label="Open calendar"]').nth(2).click()
+      // Click last day available of the current month
+      await page.locator('button:not(.mat-calendar-body-disabled) > .mat-calendar-body-cell-content').last().click()
     }
 
-    // IF organization is gigger
-    if (organization.type === 'gigger') {
-        // click payout day mat-select
-        await page.locator('[formcontrolname="payout_day"]').click()
-        // Click text=Last day of the month
-        await page.locator('text=Last day of the month').click()
+    if(frequency !== 'once'){
+      // click payout day mat-select
+      await page.locator('[formcontrolname="payout_day"]').click()
+      // Click text=Last day of the month
+      await page.locator('text=Last day of the month').click()
     }
 
     // Click next
@@ -203,4 +202,70 @@ export class CollaborationsPage {
     await expect(page.locator('.mat-snack-bar-container.info')).toBeVisible()
   }
 
+  async createHourlyCollaboration(titleID = ''){
+    const page = this.page
+    const baseURL = this.baseURL
+    const organization = getOrganizationFromAuthState(baseURL)
+    const frequency = 'hourly'
+    
+    const randNumber = await new GenerateRandomString().generateRandomNumber()
+
+    await page.locator('[aria-label="Start a New collab"]').click()
+
+    await page.click('text=Express Collaboration')
+
+    // Fill collaboration title
+    const randTitle = 'Collaboration express hourly ' + titleID
+    await page.locator('[formcontrolname="title"]').fill(randTitle)
+
+    // Open Calendar
+    await page.locator('[aria-label="Open calendar"]').first().click()
+
+    // Click first day available of the current month
+    await page.locator('[aria-label="Previous month"]').click({ clickCount: 3 })
+    await page.locator('button:not(.mat-calendar-body-disabled) > .mat-calendar-body-cell-content').first().click()
+
+    // Open calendar
+    await page.locator('[aria-label="Open calendar"]').nth(1).click()
+
+    // Click last day available of the next month
+    await page.locator('[aria-label="Next month"]').click()
+    await page.locator('button:not(.mat-calendar-body-disabled) > .mat-calendar-body-cell-content').last().click()
+
+    // Click Frequency dropdown
+    await page.locator('[formcontrolname="frequency"]').click()
+
+    // Click Frequency dropdown
+    await page.locator(`.mat-option-text:has-text("${frequency}")`).click()
+    
+    // Set formcontrolname="postpaid" value
+    await page.locator('[formcontrolname="postpaid"]').fill(randNumber.toString())
+
+    if(frequency === 'once'){
+      // click payout day mat-select
+      await page.locator('[aria-label="Open calendar"]').nth(2).click()
+      // Click last day available of the current month
+      await page.locator('button:not(.mat-calendar-body-disabled) > .mat-calendar-body-cell-content').last().click()
+    }
+
+    if(frequency !== 'once'){
+      // click payout day mat-select
+      await page.locator('[formcontrolname="payout_day"]').click()
+      // Click text=Last day of the month
+      await page.locator('text=Last day of the month').click()
+    }
+
+    // Invite to collaboration
+    // Fill [placeholder="PARTNER\'S EMAIL OR NAME"]
+    await page.locator('[placeholder="PARTNER\\\'S EMAIL OR NAME"]').fill(organization.email)
+
+    // Click first element as result of autocomplete
+    await page.locator('app-org-preview-horizontal .partner-item').first().click()
+
+
+    // Click button:has-text("Submit")
+    await page.locator('button:has-text("Submit")').click()
+
+    await expect(page.locator('.mat-snack-bar-container.info')).toBeVisible()
+  }
 }
