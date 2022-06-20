@@ -40,11 +40,11 @@ test.describe.serial('Create collaborations', () => {
         // click accept button
         await collabItem.locator('.actions-wrapper .mat-button-wrapper:has-text("ACCEPT")').click() 
         
-        // Check the checkbox
-        await page.click('.mat-dialog-container .acceptance-section .mat-checkbox')
+        // // Check the checkbox
+        // await page.click('.mat-dialog-container .acceptance-section .mat-checkbox')
 
-        // Assert the checked state
-        expect(await page.isChecked('.mat-dialog-container .acceptance-section input.mat-checkbox-input')).toBeTruthy()
+        // // Assert the checked state
+        // expect(await page.isChecked('.mat-dialog-container .acceptance-section input.mat-checkbox-input')).toBeTruthy()
 
         // confirm accept
         await page.locator('.mat-dialog-container .mat-dialog-actions .mat-button-wrapper:has-text("YES")').click() 
@@ -83,12 +83,12 @@ test.describe.serial('Create collaborations', () => {
         // click accept button
         await collabItem.locator('.actions-wrapper .mat-button-wrapper:has-text("ACCEPT")').click() 
         
-        // Check the checkbox
-        await page.click('.mat-dialog-container .acceptance-section .mat-checkbox')
+        // // Check the checkbox
+        // await page.click('.mat-dialog-container .acceptance-section .mat-checkbox')
 
-        // Assert the checked state
-        expect(await page.isChecked('.mat-dialog-container .acceptance-section input.mat-checkbox-input')).toBeTruthy()
-        
+        // // Assert the checked state
+        // expect(await page.isChecked('.mat-dialog-container .acceptance-section input.mat-checkbox-input')).toBeTruthy()
+
         // confirm accept
         await page.locator('.mat-dialog-actions .mat-button-wrapper:has-text("YES")').click() 
        

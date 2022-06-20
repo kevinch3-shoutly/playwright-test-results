@@ -3,33 +3,33 @@
     {
       "sameSite": "None",
       "name": "_GRECAPTCHA",
-      "value": "09ADepaW0YsEj2XCKDkm5gYIBscdcyW7Jfvhjef6OAVOqXXxzJOnlaNtrnNmARLzxHnpAft9Sjhfe3PunF5h53ITg",
+      "value": "09ADepaW35UHs7WHCBXm1LJMK5gmyQgN9a8eq589LGhOzayDm06lo3s8r_A5uXVPLHNQ2FSWOFFhesG_W-NLxqsI0",
       "domain": "www.google.com",
       "path": "/recaptcha",
-      "expires": 1670921293.784771,
+      "expires": 1671013638.646949,
       "httpOnly": true,
       "secure": true
     }
   ],
   "origins": [
     {
-      "origin": "https://localhost:4200",
+      "origin": "https://test.gigs.shoutly.com",
       "localStorage": [
         {
           "name": "user",
-          "value": "{\"id\":51,\"first_name\":\"Testie\",\"last_name\":\"Agency\",\"email\":\"e2etest7pStD@shoutlymail.com\",\"language\":\"en\",\"created_at\":\"2022-06-16T08:48:15.000000Z\",\"updated_at\":\"2022-06-16T08:48:29.000000Z\",\"current_org\":68,\"auth\":3,\"name\":\"Testie Agency\",\"role\":{\"id\":1,\"name\":\"Owner\",\"slug\":\"owner\",\"created_at\":\"2022-06-13T13:03:39.000000Z\",\"updated_at\":\"2022-06-13T13:03:39.000000Z\",\"pivot\":{\"user_id\":51,\"role\":1}},\"position\":\"CEO\",\"personal_number\":null,\"avatar\":\"https://test.www3.shoutly.com/v1/file/avatars/avatar-36.png\",\"email_verified\":false,\"mobile\":null,\"email_verified_at\":null}"
+          "value": "{\"id\":34,\"first_name\":\"Testie\",\"last_name\":\"Agency\",\"email\":\"e2etest6cajc@shoutlymail.com\",\"language\":\"en\",\"created_at\":\"2022-06-17T10:27:20.000000Z\",\"updated_at\":\"2022-06-17T10:28:14.000000Z\",\"current_org\":38,\"auth\":3,\"name\":\"Testie Agency\",\"role\":{\"id\":1,\"name\":\"Owner\",\"slug\":\"owner\",\"created_at\":\"2022-06-16T15:31:51.000000Z\",\"updated_at\":\"2022-06-16T15:31:51.000000Z\",\"pivot\":{\"user_id\":34,\"role\":1}},\"position\":\"CEO\",\"personal_number\":null,\"avatar\":\"https://test.www3.shoutly.com/v1/file/avatars/avatar-36.png\",\"email_verified\":false,\"mobile\":null,\"email_verified_at\":null}"
         },
         {
           "name": "jwt_token",
-          "value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwczpcL1wvdGVzdC53d3czLnNob3V0bHkuY29tXC92MVwvc2Vzc2lvblwvcmVnaXN0ZXIiLCJpYXQiOjE2NTUzNjkyOTUsImV4cCI6MTY1NTM3Mjg5NSwibmJmIjoxNjU1MzY5Mjk1LCJqdGkiOiJXc2NpVFdpNGxJU3BJMkFWIiwic3ViIjo1MSwicHJ2IjoiMGUxYTk3OWM2MjdiM2I3ODlkM2U3ZGZlMjY3MWYzYzc0ODEzZjZlNyIsInVhIjoiTW96aWxsYVwvNS4wIChNYWNpbnRvc2g7IEludGVsIE1hYyBPUyBYIDEwXzE1XzcpIEFwcGxlV2ViS2l0XC81MzcuMzYgKEtIVE1MLCBsaWtlIEdlY2tvKSBDaHJvbWVcLzEwMi4wLjUwMDUuNDAgU2FmYXJpXC81MzcuMzYiLCJ1aWQiOjF9.josmkZAEGVS2OOTAJPRM1HKj2aOqlGoI-ih7BVRsbRg"
+          "value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwczpcL1wvdGVzdC53d3czLnNob3V0bHkuY29tXC92MVwvc2Vzc2lvblwvcmVnaXN0ZXIiLCJpYXQiOjE2NTU0NjE2NDAsImV4cCI6MTY1NTQ2NTI0MCwibmJmIjoxNjU1NDYxNjQwLCJqdGkiOiJGWWFXTGZ3UGtDWThCd2xHIiwic3ViIjozNCwicHJ2IjoiMGUxYTk3OWM2MjdiM2I3ODlkM2U3ZGZlMjY3MWYzYzc0ODEzZjZlNyIsInVhIjoiTW96aWxsYVwvNS4wIChNYWNpbnRvc2g7IEludGVsIE1hYyBPUyBYIDEwXzE1XzcpIEFwcGxlV2ViS2l0XC81MzcuMzYgKEtIVE1MLCBsaWtlIEdlY2tvKSBDaHJvbWVcLzEwMi4wLjUwMDUuNDAgU2FmYXJpXC81MzcuMzYiLCJ1aWQiOjF9.bKs7yRC0CzpVtWneReMqyAoVYaTrc6scXiYlNrxe_Gw"
         },
         {
           "name": "_grecaptcha",
-          "value": "09ADepaW2bTMcnVut2oU2BeC7PSnSIrfeiBd2HG3HReLBPTZ76DBEB7DwjwMvq58PsbYJbruvJoMkTC1b3UUE1UwYpBA"
+          "value": "09ADepaW1qYJlIw0eIf7DXhThZF_v-Wt7DHsnT7hfCgtcajb7-NJjcF5xubQzPCOYpughnt8vhx4XQF_LTioGh5b7HUA"
         },
         {
           "name": "organization",
-          "value": "{\"id\":68,\"type\":\"gigger\",\"agency\":67,\"currency\":\"SEK\",\"form\":\"Business\",\"name\":\"Test Company\",\"avatar\":\"https://test.www3.shoutly.com/v1/file/avatars/avatar-36.png\",\"vat_number\":\"SE559219259401\",\"email\":\"e2etest7pStD@shoutlymail.com\",\"address1\":\"123 Test Street\",\"address2\":null,\"postcode\":\"123456\",\"city\":\"Stockholm\",\"country\":\"SE\",\"state\":null,\"generated_by\":null,\"created_at\":\"2022-06-16T08:48:15.000000Z\",\"updated_at\":\"2022-06-16T08:48:19.000000Z\",\"payout\":{\"org_id\":68,\"type\":\"Paypal\",\"bank_country\":null,\"iban\":null,\"account\":null,\"clearing\":null,\"bic\":null,\"uk_sort_code\":null,\"us_routing_number\":null,\"account_holder\":null,\"transfer_type\":\"aba\",\"paypal_email\":\"e2etest@shoutlymail.com\",\"swish_number\":null,\"ssn\":null,\"email\":null,\"account_type\":\"CHECKING\",\"legal_type\":\"BUSINESS\"},\"profile\":{\"org_id\":68,\"about\":null,\"skills\":[],\"workfields\":[]}}"
+          "value": "{\"id\":38,\"type\":\"gigger\",\"agency\":37,\"currency\":\"SEK\",\"form\":\"Business\",\"name\":\"Test Company\",\"avatar\":\"https://test.www3.shoutly.com/v1/file/avatars/avatar-36.png\",\"vat_number\":\"SE559219259401\",\"email\":\"e2etest6cajc@shoutlymail.com\",\"address1\":\"123 Test Street\",\"address2\":null,\"postcode\":\"123456\",\"city\":\"Stockholm\",\"country\":\"SE\",\"state\":null,\"generated_by\":null,\"created_at\":\"2022-06-17T10:27:20.000000Z\",\"updated_at\":\"2022-06-17T10:27:24.000000Z\",\"payout\":{\"org_id\":38,\"type\":\"Paypal\",\"bank_country\":null,\"iban\":null,\"account\":null,\"clearing\":null,\"bic\":null,\"uk_sort_code\":null,\"us_routing_number\":null,\"account_holder\":null,\"transfer_type\":\"aba\",\"paypal_email\":\"e2etest@shoutlymail.com\",\"swish_number\":null,\"ssn\":null,\"email\":null,\"account_type\":\"CHECKING\",\"legal_type\":\"BUSINESS\"},\"profile\":{\"org_id\":38,\"about\":null,\"skills\":[],\"workfields\":[]}}"
         }
       ]
     },
@@ -38,7 +38,7 @@
       "localStorage": [
         {
           "name": "rc::a",
-          "value": "MWJrczhta24yZWpxcA=="
+          "value": "MXJ1YWtoMDM2d3l0dw=="
         }
       ]
     }
