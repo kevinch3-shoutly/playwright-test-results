@@ -100,10 +100,10 @@ export class CollaborationsPage {
     await page.locator('[formcontrolname="title"]').fill(randTitle)
 
     // Create and select department
-    await page.locator('[formcontrolname="department_id"]').click()
-    await page.locator('app-department-input-create .dropdown-block .mat-form-field-infix input').fill('Engineering')
-    await page.locator('app-department-input-create .dropdown-block .mat-form-field-suffix .suffix-action').click()
-    await page.locator('.mat-select-panel .mat-option').click()
+    // await page.locator('[formcontrolname="department_id"]').click()
+    // await page.locator('app-department-input-create .dropdown-block .mat-form-field-infix input').fill('Engineering')
+    // await page.locator('app-department-input-create .dropdown-block .mat-form-field-suffix .suffix-action').click()
+    // await page.locator('.mat-select-panel .mat-option').click()
 
     // Fill reason
     await page.locator('[formcontrolname="reason"]').fill('Collaboration Reason')
@@ -115,7 +115,7 @@ export class CollaborationsPage {
     await page.locator('[formcontrolname="description"]').fill('Collaboration Description')
 
     // Click next
-    await page.locator('button:has-text("Next keyboard_arrow_right")').click()
+    await page.locator('.stepper-footer .action.right button').click()
 
 
     // Add skills
@@ -138,7 +138,7 @@ export class CollaborationsPage {
     }
 
     // Click next
-    await page.locator('button:has-text("Next keyboard_arrow_right")').click()
+    await page.locator('.stepper-footer .action.right button').click()
 
     // Open Calendar
     await page.locator('[aria-label="Open calendar"]').first().click()
@@ -156,7 +156,7 @@ export class CollaborationsPage {
     await page.locator('text=Deadline is not strict').click()
 
     // Click next
-    await page.locator('button:has-text("Next keyboard_arrow_right")').click()
+    await page.locator('.stepper-footer .action.right button').click()
 
 
     // Click Frequency dropdown
@@ -186,7 +186,7 @@ export class CollaborationsPage {
     }
 
     // Click next
-    await page.locator('button:has-text("Next keyboard_arrow_right")').click()
+    await page.locator('.stepper-footer .action.right button').click()
 
     // Invite to collaboration
     // Fill [placeholder="PARTNER\'S EMAIL OR NAME"]
