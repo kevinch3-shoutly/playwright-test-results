@@ -127,7 +127,7 @@ export async function switchOrganizationByFirstOnList(page: Page) {
     await expect(page.locator('.mat-snack-bar-container.success')).toBeVisible()
 
     // wait for dashboard
-    await page.waitForURL(`**\/dashboard`)
+    await page.waitForURL(/dashboard/)
 
     await page.context().storageState({ path: 'auth-state.json' })
 

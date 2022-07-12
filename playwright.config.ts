@@ -7,6 +7,8 @@ const config: PlaywrightTestConfig = {
     headless: false,
     ignoreHTTPSErrors: true
   },
+  timeout: 160000,
+  expect: { timeout: 25000 },
   globalSetup: require.resolve('./global-setup')
 }
 export default config
