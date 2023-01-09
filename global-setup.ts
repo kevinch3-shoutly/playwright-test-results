@@ -37,7 +37,7 @@ async function globalSetup(config: FullConfig) {
   const context = await browser.newContext({ ignoreHTTPSErrors: true })
   const page = await context.newPage()
   
-  const authPage = new AuthPage(page, baseURL)
+  const authPage = new AuthPage(page, baseURL || '')
 
   await authPage.signup(org_type)
   await authPage.onboard(page, org_type)

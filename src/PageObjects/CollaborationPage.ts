@@ -93,7 +93,7 @@ export class CollaborationsPage {
 
     await page.locator('[aria-label="Start a New collab"]').click()
 
-    await page.locator('text=Long-Term Collaboration').click()
+    await page.locator('text=Regular Collaboration').click()
 
     // Fill [placeholder="Marketing campaign for brand"]
     const randTitle = 'Collaboration test ' + await new GenerateRandomString().generateRandomString()
