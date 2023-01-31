@@ -1,32 +1,9 @@
-import { Page } from "@playwright/test"
-const fs = require('fs')
-
-export default class GenerateRandomString { 
-    async generateRandomString(length: number = 5): Promise<string> {
-        
-        var result           = ''
-        var characters       = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
-        var charactersLength = characters.length
-
-        for ( var i = 0; i < length; i++ ) {
-            result += characters.charAt(Math.floor(Math.random() * charactersLength))
-        }
-
-        return result
-    }
-
-    async generateRandomNumber(): Promise<number> {
-        // get random number
-        const randNumber = Math.floor(Math.random() * (100 - 1 + 1)) + 1
-
-        return randNumber
-    }
-}
+import { Page } from '@playwright/test'
+import fs from 'fs'
 
 async function scrollDownAgreement(page: Page) {
     const agreementContentDialog = await page.locator('.mat-dialog-container .agreement-dialog-content > .agreement-dialog-content-text')
-    const agreementContentDialogBox = await agreementContentDialog.boundingBox()
-      
+    const agreementContentDialogBox = await agreementContentDialog.boundingBox() || { height: 0 }
     await page.mouse.wheel(0, (agreementContentDialogBox.height + 100))
   }
   
@@ -35,8 +12,7 @@ export async function handleAgreementAcceptance(page: Page) {
     await scrollDownAgreement(page)
   
     // Button should be enabled
-    let elementButtonAcceptAgreement = await page.$('app-agreement-dialog button:has-text("Accept")')
-    await elementButtonAcceptAgreement.waitForElementState('enabled')
+    const elementButtonAcceptAgreement = await page.locator('app-agreement-dialog button', { hasText: 'Accept'})
     await elementButtonAcceptAgreement.click()
   
     // click accept
@@ -46,22 +22,25 @@ export async function handleAgreementAcceptance(page: Page) {
     await page.waitForNavigation({ waitUntil: 'load' })
 }
 
-export async function getAuthState(page: Page, authType: string) {
-    
-}
-
 export function getOrganizationFromAuthState(baseURL){
     // get authState
-    let authStateJSON = JSON.parse(fs.readFileSync('auth-state.json'))
+    const authStateJSON = JSON.parse(fs.readFileSync('auth-state.json').toString())
 
     // get origins
-    let origins = authStateJSON.origins
+    const origins = authStateJSON.origins
 
     // get localstorage
-    let local_storage: {name, value}[] = origins.find(item => item.origin === baseURL).localStorage
+    const local_storage: { name, value }[] = origins.find(item => item.origin === baseURL).localStorage 
     
     // get organization
-    let organization = local_storage.find(item => item.name === 'organization').value
+    let organization = local_storage.find(item => item.name === 'organization')?.value || '{}'
 
     return organization = JSON.parse(organization)
+}
+
+export function lastDayOfNextMonth(date: Date) {
+    const inputDate = new Date(date)
+    const lastDayOfNextMonth = new Date(inputDate.getFullYear(), inputDate.getMonth() + 3, 0)
+    const lastDayOfNextMonthString = lastDayOfNextMonth.toISOString().slice(0, 10)
+    return lastDayOfNextMonthString
 }

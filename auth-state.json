@@ -1,44 +1,28 @@
 {
-  "cookies": [
-    {
-      "sameSite": "None",
-      "name": "_GRECAPTCHA",
-      "value": "09AMjm62Wd-TfMADhifLtkxG1JMT0w0P4__Ujenliv-ErYzYi_tiQ76wOq4D4oX9pAMvjxV4SgmDNGxUa4Dr5wPys",
-      "domain": "www.google.com",
-      "path": "/recaptcha",
-      "expires": 1676289019.531578,
-      "httpOnly": true,
-      "secure": true
-    }
-  ],
+  "cookies": [],
   "origins": [
     {
       "origin": "https://localhost:4200",
       "localStorage": [
         {
           "name": "user",
-          "value": "{\"id\":41,\"first_name\":\"Testie\",\"last_name\":\"Agency\",\"email\":\"e2etestU3DMp@shoutlymail.com\",\"language\":\"en\",\"created_at\":\"2022-08-17T11:50:21.000000Z\",\"updated_at\":\"2022-08-17T11:50:28.000000Z\",\"current_org\":41,\"auth\":3,\"name\":\"Testie Agency\",\"role\":{\"id\":1,\"name\":\"Owner\",\"slug\":\"owner\",\"created_at\":\"2022-07-13T12:42:01.000000Z\",\"updated_at\":\"2022-07-13T12:42:01.000000Z\",\"pivot\":{\"user_id\":41,\"role\":1}},\"position\":null,\"personal_number\":null,\"avatar\":\"https://www3.shoutly.test/v1/file/avatars/avatar-36.png\",\"email_verified\":false,\"mobile\":null,\"email_verified_at\":null}"
+          "value": "{\"id\":182,\"first_name\":\"Trey\",\"last_name\":\"Ullrich\",\"email\":null,\"language\":\"en\",\"created_at\":\"2023-01-31T10:04:01.000000Z\",\"updated_at\":\"2023-01-31T10:04:14.000000Z\",\"current_org\":243,\"mobile\":\"467123456789\",\"auth\":2,\"name\":\"Trey Ullrich\",\"role\":{\"id\":1,\"name\":\"Owner\",\"slug\":\"owner\",\"created_at\":\"2023-01-30T12:35:31.000000Z\",\"updated_at\":\"2023-01-30T12:35:31.000000Z\",\"pivot\":{\"user_id\":182,\"role\":1}},\"position\":null,\"personal_number\":null,\"avatar\":\"https://test.www3.shoutly.com/v1/file/avatars/avatar-36.png\",\"email_verified\":false,\"email_verified_at\":null,\"guide_seen\":true}"
+        },
+        {
+          "name": "org_payout",
+          "value": "{\"org_id\":243,\"type\":\"Paypal\",\"address1\":null,\"city\":null,\"postcode\":null,\"state\":null,\"bank_country\":null,\"iban\":null,\"account\":null,\"clearing\":null,\"bic\":null,\"uk_sort_code\":null,\"us_routing_number\":null,\"bank_code\":null,\"institution_number\":null,\"transit_number\":null,\"clabe\":null,\"id_number\":null,\"ifsc\":null,\"account_holder\":null,\"transfer_type\":\"aba\",\"paypal_email\":\"Breanna.Cremin@gmail.com\",\"swish_number\":null,\"ssn\":null,\"email\":null,\"account_type\":\"CHECKING\",\"legal_type\":\"BUSINESS\",\"currency\":\"SEK\"}"
         },
         {
           "name": "jwt_token",
-          "value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwczpcL1wvd3d3My5zaG91dGx5LnRlc3RcL3YxXC9zZXNzaW9uXC9yZWdpc3RlciIsImlhdCI6MTY2MDczNzAyNCwiZXhwIjoxNjYwNzQwNjI0LCJuYmYiOjE2NjA3MzcwMjQsImp0aSI6Im53aE04dU5JZDI1c0psdFYiLCJzdWIiOjQxLCJwcnYiOiIwZTFhOTc5YzYyN2IzYjc4OWQzZTdkZmUyNjcxZjNjNzQ4MTNmNmU3IiwidWEiOiJNb3ppbGxhXC81LjAgKE1hY2ludG9zaDsgSW50ZWwgTWFjIE9TIFggMTBfMTVfNykgQXBwbGVXZWJLaXRcLzUzNy4zNiAoS0hUTUwsIGxpa2UgR2Vja28pIENocm9tZVwvMTAyLjAuNTAwNS40MCBTYWZhcmlcLzUzNy4zNiIsInVpZCI6MX0.OYugaqWNlV2_UlLtAdjUjXZFLFhxaBN03Q-MUBtJYAw"
-        },
-        {
-          "name": "_grecaptcha",
-          "value": "09AMjm62WSIBZ-YipkwPFKkiFz63Fg7GRsjS1QNeM696ePftlxhpJ9s_bIRlc8Z_tAIJ4gOR-5YWMv3HtIPDpEYSvMBIci"
+          "value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwczovL3Rlc3Qud3d3My5zaG91dGx5LmNvbS92MS9zZXNzaW9uL3JlZ2lzdGVyIiwiaWF0IjoxNjc1MTU5NDQxLCJleHAiOjE2NzUxNjMwNDEsIm5iZiI6MTY3NTE1OTQ0MSwianRpIjoiSElMZDV4SlZVZFVsSU5wZCIsInN1YiI6IjE4MiIsInBydiI6IjBlMWE5NzljNjI3YjNiNzg5ZDNlN2RmZTI2NzFmM2M3NDgxM2Y2ZTciLCJ1YSI6Ik1vemlsbGEvNS4wIChNYWNpbnRvc2g7IEludGVsIE1hYyBPUyBYIDEwXzE1XzcpIEFwcGxlV2ViS2l0LzUzNy4zNiAoS0hUTUwsIGxpa2UgR2Vja28pIEhlYWRsZXNzQ2hyb21lLzEwOS4wLjU0MTQuNDYgU2FmYXJpLzUzNy4zNiIsInVpZCI6MX0.zCuyZDW-ROKrdPDAbpI-KCNMvFc5OhuIU-fabhHe6pU"
         },
         {
           "name": "organization",
-          "value": "{\"id\":41,\"type\":\"gigger\",\"agency\":40,\"currency\":\"SEK\",\"form\":\"Business\",\"name\":\"Test Company\",\"avatar\":\"https://www3.shoutly.test/v1/file/avatars/avatar-36.png\",\"vat_number\":\"SE559219259401\",\"email\":\"e2etestU3DMp@shoutlymail.com\",\"address1\":\"123 Test Street\",\"address2\":null,\"postcode\":\"123456\",\"city\":\"Stockholm\",\"country\":\"SE\",\"state\":null,\"generated_by\":null,\"created_at\":\"2022-08-17T11:50:21.000000Z\",\"updated_at\":\"2022-08-17T11:50:30.000000Z\",\"agency_counterpart\":{\"id\":40,\"type\":1,\"agency\":41,\"currency\":\"SEK\",\"form\":1,\"name\":\"Test Company\",\"avatar\":null,\"vat_number\":\"SE559219259401\",\"email\":\"e2etestU3DMp@shoutlymail.com\",\"address1\":\"123 Test Street\",\"address2\":null,\"postcode\":\"123456\",\"city\":\"Stockholm\",\"country\":\"SE\",\"state\":null,\"generated_by\":null,\"created_at\":\"2022-08-17T11:50:21.000000Z\",\"updated_at\":\"2022-08-17T11:50:31.000000Z\"},\"payout\":{\"org_id\":41,\"type\":\"Paypal\",\"bank_country\":null,\"iban\":null,\"account\":null,\"clearing\":null,\"bic\":null,\"uk_sort_code\":null,\"us_routing_number\":null,\"bank_code\":null,\"institution_number\":null,\"transit_number\":null,\"account_holder\":null,\"transfer_type\":\"aba\",\"paypal_email\":\"e2etest@shoutlymail.com\",\"swish_number\":null,\"ssn\":null,\"email\":null,\"account_type\":\"CHECKING\",\"legal_type\":\"BUSINESS\"},\"profile\":{\"org_id\":41,\"about\":null,\"skills\":[],\"workfields\":[]}}"
-        }
-      ]
-    },
-    {
-      "origin": "https://www.google.com",
-      "localStorage": [
+          "value": "{\"id\":243,\"type\":\"gigger\",\"agency\":242,\"currency\":\"SEK\",\"form\":\"Business\",\"name\":\"Test Gigger\",\"avatar\":\"https://test.www3.shoutly.com/v1/file/avatars/avatar-36.png\",\"vat_number\":\"SE559219259401\",\"email\":\"e2etestoenpro7t3q@shoutlymail.com\",\"address1\":\"123 Test Street\",\"address2\":null,\"postcode\":\"123456\",\"city\":\"Stockholm\",\"country\":\"SE\",\"state\":null,\"generated_by\":null,\"theme_name\":null,\"logo\":null,\"active\":\"1\",\"org_ready\":true,\"created_at\":\"2023-01-31T10:04:01.000000Z\",\"updated_at\":\"2023-01-31T10:04:09.000000Z\"}"
+        },
         {
-          "name": "rc::a",
-          "value": "cHAwOTNqMWFiaHNxOQ=="
+          "name": "org_billing",
+          "value": "{\"org_id\":242,\"type\":\"pay-as-you-go\",\"email\":\"Clay_Nienow@gmail.com\",\"shoutly_fee_percent\":4,\"payout_day\":null,\"payment_term\":10,\"autoaccept\":false,\"template\":1,\"fee\":1,\"currency_fee\":1,\"csv_import\":false}"
         }
       ]
     }

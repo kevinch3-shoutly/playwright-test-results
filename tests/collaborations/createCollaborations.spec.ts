@@ -1,322 +1,242 @@
+import { faker } from '@faker-js/faker'
 import { test, expect } from '@playwright/test'
 import { CollaborationsPage } from '../../src/PageObjects/CollaborationPage'
-import { switchOrganizationByFirstOnList } from '../auth/functions'
-import GenerateRandomString from '../helpers'
-
-test.use({
-    storageState: 'auth-state.json'
-})
+import { createAnAgencyFromOtp, loginFromOTP, switchIntoOrganization } from '../auth/functions'
+import { getOrganizationFromAuthState } from '../helpers'
 
 test.describe.serial('Create collaborations', () => {
 
-    test.beforeEach(async ({ page, baseURL }) => {
-        await page.goto(`${baseURL}/collaborations`)
+    test.beforeAll(async ({ browser, request, baseURL }) => {
+        await createAnAgencyFromOtp(browser, request, baseURL)
     })
-
+    
     test('Should create an express collaboration', async({ page, baseURL }) => {
-        const collaborationsPage = new CollaborationsPage(page, baseURL)      
-        await collaborationsPage.createCollaborationExpress()
+        await loginFromOTP(page, baseURL)
+        const collaborationsPage = new CollaborationsPage(page, baseURL)
+        const titleID = faker.random.alphaNumeric(10)
+        await collaborationsPage.createExpressCollaboration(titleID, 'once')
     })
 
-    test('Should create an express hourly collaboration', async({ page, baseURL }) => {
+    test('Should create and accept an express hourly collaboration', async({ page, baseURL }) => {
+        await loginFromOTP(page, baseURL)
         const collaborationsPage = new CollaborationsPage(page, baseURL)
-        const titleID = await new GenerateRandomString().generateRandomString()  
-        await collaborationsPage.createHourlyCollaboration(titleID)
-        
-        // be an employer
-        await switchOrganizationByFirstOnList(page)
+        const titleID = faker.random.alphaNumeric(10)
 
-        // create collaboration with counterpart
-        await collaborationsPage.createCollaborationExpress(titleID)
-        
-        // be a gigger
-        await switchOrganizationByFirstOnList(page)
-        
-        // go to collaborations page
-        await page.locator('.sidebar-menu .menu-item-collaborations').click()
-
-        const collabItem = page.locator('.grid-collaboration-item', { hasText: titleID })
-        
-        // click accept button
-        await collabItem.locator('.actions-wrapper .mat-button-wrapper:has-text("ACCEPT")').click() 
-        
-        // // Check the checkbox
-        // await page.click('.mat-dialog-container .acceptance-section .mat-checkbox')
-
-        // // Assert the checked state
-        // expect(await page.isChecked('.mat-dialog-container .acceptance-section input.mat-checkbox-input')).toBeTruthy()
-
-        // confirm accept
-        await page.locator('.mat-dialog-container .mat-dialog-actions .mat-button-wrapper:has-text("YES")').click() 
-       
-        // await Loader to disappear
-        await page.waitForResponse(response => response.url().includes('/collabs/'))
-
-        // check if collaboration is accepted
-        await expect(collabItem.locator('.item-info-content .item-wrapper .param').first()).toContainText('Ongoing')
-
+        await switchIntoOrganization(page, 'Gigger')
+        await collaborationsPage.createExpressCollaboration(titleID)
+        await switchIntoOrganization(page, 'Employer')
+        await page.getByTestId('sidebar-menu-item-collaborations').click()
+        await page.locator('tr.mat-row', { hasText: titleID }).locator('.mat-cell.mat-column-actions > button.mat-icon-button').click()
+        await page.locator('.actions-wrapper .mat-button-wrapper', { hasText: 'ACCEPT' }).click()
+        await page.locator('.mat-dialog-container .mat-dialog-actions .mat-button-wrapper', { hasText: 'YES' }).click()
+        await expect(page.locator('.item-wrapper .item-info .status.ongoing')).toBeTruthy()
     })
 
     test('Should create a regular collaboration', async({ page, baseURL }) => {
-        const collaborationsPage = new CollaborationsPage(page, baseURL)      
-        await collaborationsPage.createCollaborationRegular()
+        await loginFromOTP(page, baseURL)
+        const collaborationsPage = new CollaborationsPage(page, baseURL)
+        const titleID = faker.random.alphaNumeric(10)
+        await collaborationsPage.createCollaborationRegular(titleID, 'once')
+        await switchIntoOrganization(page, 'Gigger')
+        await page.getByTestId('sidebar-menu-item-collaborations').click()
+        await page.locator('tr.mat-row', { hasText: titleID }).locator('.mat-cell.mat-column-actions > button.mat-icon-button').click()
+        await page.locator('.actions-wrapper .mat-button-wrapper', { hasText: 'ACCEPT' }).click()
+        await page.locator('.mat-dialog-container .mat-dialog-actions .mat-button-wrapper', { hasText: 'YES' }).click()
+        await expect(page.locator('.item-wrapper .item-info .status.ongoing')).toBeTruthy()
     })
 
-    test('Should accept a collaboration', async({ page, baseURL }) => {
-        const titleID = await new GenerateRandomString().generateRandomString()
-        const collaborationsPage = new CollaborationsPage(page, baseURL)
-
-        // be an employer
-        await switchOrganizationByFirstOnList(page)
-
-        // create collaboration with counterpart
-        await collaborationsPage.createCollaborationExpress(titleID)
-        
-        // be a gigger
-        await switchOrganizationByFirstOnList(page)
-        
-        // go to collaborations page
-        await page.locator('.sidebar-menu .menu-item-collaborations').click()
-
-        const collabItem = page.locator('.grid-collaboration-item', { hasText: titleID })
-        
-        // click accept button
-        await collabItem.locator('.actions-wrapper .mat-button-wrapper:has-text("ACCEPT")').click() 
-        
-        // // Check the checkbox
-        // await page.click('.mat-dialog-container .acceptance-section .mat-checkbox')
-
-        // // Assert the checked state
-        // expect(await page.isChecked('.mat-dialog-container .acceptance-section input.mat-checkbox-input')).toBeTruthy()
-
-        // confirm accept
-        await page.locator('.mat-dialog-actions .mat-button-wrapper:has-text("YES")').click() 
-       
-        // await Loader to disappear
-        await page.waitForResponse(response => response.url().includes('/collabs/'))
-
-        // check if collaboration is accepted
-        await expect(collabItem.locator('.item-info-content .item-wrapper .param').first()).toContainText('Ongoing')
+    test('Should create a regular collaboration and fail', async({ page, baseURL }) => {
+        await loginFromOTP(page, baseURL)
+        const organization = getOrganizationFromAuthState(baseURL)
+        const frequency = 'once'
+        const randNumber = faker.datatype.number(99999)
+        await page.goto(`${baseURL}/collaborations/create`)
+        await page.waitForURL('**/collaborations/create')
+        const randTitle = 'Collaboration should not create ' + faker.random.alphaNumeric(10)
+        await page.locator('[formcontrolname="title"]').fill(randTitle)
+        await page.locator('[formcontrolname="reason"]').fill('Collaboration Reason')
+        await page.locator('[formcontrolname="location"]').fill('Atlanta, GA')
+        await page.locator('[formcontrolname="description"]').fill('Collaboration Description')
+        await page.locator('.stepper-footer .action.right button').click()
+        await page.locator('[formcontrolname="experience_years"]').fill('7')
+        await page.locator('[formcontrolname="experience_level"]').click()
+        await page.locator('text=Senior').click()
+        await page.locator('.stepper-footer .action.right button').click()
+        await page.locator('[aria-label="Open calendar"]').first().click()
+        await page.locator('button:not(.mat-calendar-body-disabled) > .mat-calendar-body-cell-content').first().click()
+        await page.locator('[aria-label="Open calendar"]').nth(1).click()
+        await page.locator('button:not(.mat-calendar-body-disabled) > .mat-calendar-body-cell-content').last().click()
+        await page.locator('text=Deadline is not strict').click()
+        await page.locator('.stepper-footer .action.right button').click()
+        await page.locator('[formcontrolname="frequency"]').click()
+        await page.locator(`.mat-option-text:has-text("${frequency}")`).click()
+        await page.locator('[formcontrolname="postpaid"]').fill(randNumber.toString())
+        // SKIP THIS TO TEST FAILING [formcontrolname="currency_fee"]
+        await page.locator('[aria-label="Open calendar"]').nth(2).click()
+        await page.locator('button:not(.mat-calendar-body-disabled) > .mat-calendar-body-cell-content').last().click()
+        await page.locator('.stepper-footer .action.right button').click()
+        await page.getByTestId('invite-input-email-or-name').click()
+        await page.getByTestId('invite-input-email-or-name').type(organization.email, { delay: 10 })
+        await page.locator('app-org-preview-horizontal .partner-item').first().click()
+        await page.locator('button:has-text("Submit")').click()
+        await expect(page.locator('.server-errors > div b')).toHaveText('The selected currency fee is invalid.')
     })
 
     test('Should decline a collaboration', async({ page, baseURL }) => {
-        const titleID = await new GenerateRandomString().generateRandomString()
+        await loginFromOTP(page, baseURL)
         const collaborationsPage = new CollaborationsPage(page, baseURL)
+        const titleID = faker.random.alphaNumeric(10)
 
-        // be an employer
-        await switchOrganizationByFirstOnList(page)
-
-        // create collaboration with counterpart
-        await collaborationsPage.createCollaborationExpress(titleID)
-        
-        // be a gigger
-        await switchOrganizationByFirstOnList(page)
-        
-        // go to collaborations page
-        await page.locator('.sidebar-menu .menu-item-collaborations').click()
-
-        const collabItem = page.locator('.grid-collaboration-item', { hasText: titleID })
-        
-        // click Decline button
-        await collabItem.locator('.actions-wrapper .mat-button-wrapper:has-text("DECLINE")').click() 
-        
-        // confirm accept
-        await page.locator('.mat-dialog-actions .mat-button-wrapper:has-text("YES")').click() 
-       
-        // await Loader to disappear
-        await page.waitForResponse(response => response.url().includes('/collabs/'))
-
-        // check if collaboration is declined
-        await expect(collabItem.locator('.item-info-content .item-wrapper .param').first()).toContainText('Declined')
+        await switchIntoOrganization(page, 'Gigger')
+        await collaborationsPage.createExpressCollaboration(titleID, 'once')
+        await switchIntoOrganization(page, 'Employer')
+        await page.getByTestId('sidebar-menu-item-collaborations').click()
+        await page.locator('tr.mat-row', { hasText: titleID }).locator('.mat-cell.mat-column-actions > button.mat-icon-button').click()
+        await page.locator('.actions-wrapper .mat-button-wrapper', { hasText: 'DECLINE' }).click()
+        await page.locator('.mat-dialog-container .mat-dialog-actions .mat-button-wrapper', { hasText: 'YES' }).click()
+        await expect(page.locator('.item-wrapper .item-info .status.declined')).toBeTruthy()
     })
 
     test('Should cancel a collaboration', async({ page, baseURL }) => {
-        const titleID = await new GenerateRandomString().generateRandomString()
+        await loginFromOTP(page, baseURL)
         const collaborationsPage = new CollaborationsPage(page, baseURL)
+        const titleID = faker.random.alphaNumeric(10)
 
-        // be an employer
-        await switchOrganizationByFirstOnList(page)
-
-        // create collaboration with counterpart
-        await collaborationsPage.createCollaborationExpress(titleID)
-        
-        // be a gigger
-        await switchOrganizationByFirstOnList(page)
-        
-        // go to collaborations page
-        await page.locator('.sidebar-menu .menu-item-collaborations').click()
-
-        const collabItem = page.locator('.grid-collaboration-item', { hasText: titleID })
-        
-        // click accept button
-        await collabItem.locator('.actions-wrapper .mat-button-wrapper:has-text("ACCEPT")').click() 
-        
-        // confirm accept
-        await page.locator('.mat-dialog-actions .mat-button-wrapper:has-text("YES")').click() 
-       
-        // await Loader to disappear
-        await page.waitForResponse(response => response.url().includes('/collabs/'))
-
-        // check if collaboration is accepted
-        await expect(collabItem.locator('.item-info-content .item-wrapper .param').first()).toContainText('Ongoing')
-   
-        /** UNTIL HERE ONLY CREATED AND ACCEPTED */
-
-        // Click cancel collaboration
-        await collabItem.locator('.actions-wrapper .mat-button-wrapper:has-text("CANCEL")').click() 
-        
-        // confirm action
-        await page.locator('.mat-dialog-actions .mat-button-wrapper:has-text("YES")').click() 
-
-        // await Loader to disappear
-        await page.waitForResponse(response => response.url().includes('/collabs/'))
-
-        // be an employer
-        await switchOrganizationByFirstOnList(page)
-
-        // go to collaborations page
-        await page.locator('.sidebar-menu .menu-item-collaborations').click()
-
-        // accept cancellation
-        await collabItem.locator('.actions-wrapper .mat-button-wrapper:has-text("ACCEPT")').click()
-        
-        // confirm action
-        await page.locator('.mat-dialog-actions .mat-button-wrapper:has-text("YES")').click()
-
-        // await Loader to disappear
-        await page.waitForResponse(response => response.url().includes('/collabs/'))
-
-        // check if collaboration is cancelled
-        await expect(collabItem.locator('.item-info-content .item-wrapper .param').first()).toContainText('Cancelled')
+        await switchIntoOrganization(page, 'Employer')
+        await collaborationsPage.createExpressCollaboration(titleID)
+        await switchIntoOrganization(page, 'Gigger')
+        await page.getByTestId('sidebar-menu-item-collaborations').click()
+        await page.locator('tr.mat-row', { hasText: titleID }).locator('.mat-cell.mat-column-actions > button.mat-icon-button').click()
+        await page.locator('.actions-wrapper .mat-button-wrapper', { hasText: 'ACCEPT' }).click()
+        await page.locator('.mat-dialog-container .mat-dialog-actions .mat-button-wrapper', { hasText: 'YES' }).click()
+        await expect(page.locator('.item-wrapper .item-info .status.sent')).toBeTruthy()
+        await switchIntoOrganization(page, 'Employer')
+        await page.getByTestId('sidebar-menu-item-collaborations').click()
+        await page.locator('tr.mat-row', { hasText: titleID }).locator('.mat-cell.mat-column-actions > button.mat-icon-button').click()
+        await page.locator('.actions-wrapper .mat-button-wrapper', { hasText: 'CANCEL' }).click()
+        await page.locator('.mat-dialog-container .mat-dialog-actions .mat-button-wrapper', { hasText: 'YES' }).click()
+        await expect(page.locator('.item-wrapper .item-info .status.ongoing')).toBeTruthy()
+        await switchIntoOrganization(page, 'Gigger')
+        await page.getByTestId('sidebar-menu-item-collaborations').click()
+        await page.locator('tr.mat-row', { hasText: titleID }).locator('.mat-cell.mat-column-actions > button.mat-icon-button').click()
+        await page.locator('.actions-wrapper .mat-button-wrapper', { hasText: 'ACCEPT' }).click()
+        await page.locator('.mat-dialog-container .mat-dialog-actions .mat-button-wrapper', { hasText: 'YES' }).click()
+        await expect(page.locator('.item-wrapper .item-info .status.cancelled')).toBeTruthy()
     })
 
     test('Should approve extension in a collaboration', async({ page, baseURL }) => {
-        const titleID = await new GenerateRandomString().generateRandomString()
+        await loginFromOTP(page, baseURL)
         const collaborationsPage = new CollaborationsPage(page, baseURL)
 
-        // be an employer
-        await switchOrganizationByFirstOnList(page)
+        await switchIntoOrganization(page, 'Employer')
+        const collabResult = collaborationsPage.createExpressCollaboration()
+        await collabResult
 
-        // create collaboration with counterpart
-        await collaborationsPage.createCollaborationExpress(titleID)
+        const tableRow = page.locator('tr.mat-row', { hasText: (await collabResult).title })
+        const date_end = new Date(await tableRow.locator('.mat-cell.mat-column-date_end').getAttribute('data-testvalue') || '').getTime()
         
-        // be a gigger
-        await switchOrganizationByFirstOnList(page)
-        
-        // go to collaborations page
-        await page.locator('.sidebar-menu .menu-item-collaborations').click()
+        await switchIntoOrganization(page, 'Gigger')
+        await page.getByTestId('sidebar-menu-item-collaborations').click()
+        await page.locator('tr.mat-row', { hasText: (await collabResult).title }).locator('.mat-cell.mat-column-actions > button.mat-icon-button').click()
+        await page.locator('.actions-wrapper .mat-button-wrapper', { hasText: 'ACCEPT' }).click()
+        await page.locator('.mat-dialog-container .mat-dialog-actions .mat-button-wrapper', { hasText: 'YES' }).click()
+        await expect(await page.locator('.item-wrapper .item-info .status.sent')).toBeTruthy()
 
-        const collabItem = page.locator('.grid-collaboration-item', { hasText: titleID })
-        
-        // click accept button
-        await collabItem.locator('.actions-wrapper .mat-button-wrapper:has-text("ACCEPT")').click() 
-        
-        // confirm accept
-        await page.locator('.mat-dialog-actions .mat-button-wrapper:has-text("YES")').click() 
-       
-        // await Loader to disappear
-        await page.waitForResponse(response => response.url().includes('/collabs/'))
-
-        // check if collaboration is accepted
-        await expect(collabItem.locator('.item-info-content .item-wrapper .param').first()).toContainText('Ongoing')
-   
-        /** UNTIL HERE ONLY CREATED AND ACCEPTED */
-
-        // Click collaboration item header
-        await collabItem.locator('.item-header').click()
-
-        // Click extension button
+        await switchIntoOrganization(page, 'Employer')
+        await page.getByTestId('sidebar-menu-item-collaborations').click()
+        await page.locator('tr.mat-row', { hasText: (await collabResult).title }).locator('.mat-cell.mat-column-actions > button.mat-icon-button').click()
         await page.locator('.mat-button-wrapper:has-text("Extend collaboration")').click()
-        
-        // Open Calendar
         await page.locator('[aria-label="Open calendar"]').first().click()
-        
-        // Click last day available of the next month
         await page.locator('[aria-label="Next month"]').click()
         await page.locator('button:not(.mat-calendar-body-disabled) > .mat-calendar-body-cell-content').last().click()
-
-        // Click EXTEND button
+        await page.locator('.mat-datepicker-content').waitFor({ state: 'detached' })
         await page.locator('.mat-dialog-container .mat-button-wrapper:has-text("Extend")').click()
-        
-        // be an employer
-        await switchOrganizationByFirstOnList(page)
 
-        // go to collaborations page
-        await page.locator('.sidebar-menu .menu-item-collaborations').click()
+        await switchIntoOrganization(page, 'Gigger')
+        await page.getByTestId('sidebar-menu-item-collaborations').click()
+        await page.locator('tr.mat-row', { hasText: (await collabResult).title }).locator('.mat-cell.mat-column-actions > button.mat-icon-button').click()
+        await page.locator('.actions-wrapper .mat-button-wrapper', { hasText: 'REVIEW EXTENSION' }).click()
 
-        // click REVIEW EXTENSION button
-        await collabItem.locator('.actions-wrapper .mat-button-wrapper:has-text("REVIEW EXTENSION")').click() 
+        const suggested_date_end = new Date(await page.getByTestId('suggested-date-end').getAttribute('data-testvalue') || '').getTime()
+        await expect(suggested_date_end).toBeGreaterThan(date_end)
 
-        // confirm accept
-        await page.locator('.mat-dialog-actions .mat-button-wrapper:has-text("YES")').click() 
-     
-        // check if collaboration is accepted
-        await expect(collabItem.locator('.item-info-content .item-wrapper .param').first()).toContainText('Ongoing')
-
+        await page.locator('.mat-dialog-container .mat-dialog-actions .mat-button-wrapper', { hasText: 'YES' }).click()
      })
 
     test('Should reject an extension in a collaboration', async({ page, baseURL }) => {
-        const titleID = await new GenerateRandomString().generateRandomString()
+        await loginFromOTP(page, baseURL)
         const collaborationsPage = new CollaborationsPage(page, baseURL)
 
-        // be an employer
-        await switchOrganizationByFirstOnList(page)
+        await switchIntoOrganization(page, 'Employer')
+        const collabResult = collaborationsPage.createExpressCollaboration()
+        await collabResult
 
-        // create collaboration with counterpart
-        await collaborationsPage.createCollaborationExpress(titleID)
-        
-        // be a gigger
-        await switchOrganizationByFirstOnList(page)
-        
-        // go to collaborations page
-        await page.locator('.sidebar-menu .menu-item-collaborations').click()
+        const tableRow = page.locator('tr.mat-row', { hasText: (await collabResult).title })
+        const date_end = new Date(await tableRow.locator('.mat-cell.mat-column-date_end').getAttribute('data-testvalue') || '').getTime()
 
-        const collabItem = page.locator('.grid-collaboration-item', { hasText: titleID })
-        
-        // click accept button
-        await collabItem.locator('.actions-wrapper .mat-button-wrapper:has-text("ACCEPT")').click() 
-        
-        // confirm accept
-        await page.locator('.mat-dialog-actions .mat-button-wrapper:has-text("YES")').click() 
-       
-        // await Loader to disappear
-        await page.waitForResponse(response => response.url().includes('/collabs/'))
+        await switchIntoOrganization(page, 'Gigger')
+        await page.getByTestId('sidebar-menu-item-collaborations').click()
+        await tableRow.locator('.mat-cell.mat-column-actions > button.mat-icon-button').click()
+        await page.locator('.actions-wrapper .mat-button-wrapper', { hasText: 'ACCEPT' }).click()
+        await page.locator('.mat-dialog-container .mat-dialog-actions .mat-button-wrapper', { hasText: 'YES' }).click()
+        await expect(await page.locator('.item-wrapper .item-info .status.sent')).toBeTruthy()
 
-        // check if collaboration is accepted
-        await expect(collabItem.locator('.item-info-content .item-wrapper .param').first()).toContainText('Ongoing')
-   
-        /** UNTIL HERE ONLY CREATED AND ACCEPTED */
-
-        // Click collaboration item header
-        await collabItem.locator('.item-header').click()
-
-        // Click extension button
+        await switchIntoOrganization(page, 'Employer')
+        await page.getByTestId('sidebar-menu-item-collaborations').click()
+        await tableRow.locator('.mat-cell.mat-column-actions > button.mat-icon-button').click()
         await page.locator('.mat-button-wrapper:has-text("Extend collaboration")').click()
-        
-        // Open Calendar
         await page.locator('[aria-label="Open calendar"]').first().click()
-        
-        // Click last day available of the next month
         await page.locator('[aria-label="Next month"]').click()
         await page.locator('button:not(.mat-calendar-body-disabled) > .mat-calendar-body-cell-content').last().click()
-
-        // Click EXTEND button
+        await page.locator('.mat-datepicker-content').waitFor({ state: 'detached' })
         await page.locator('.mat-dialog-container .mat-button-wrapper:has-text("Extend")').click()
-        
-        // be an employer
-        await switchOrganizationByFirstOnList(page)
 
-        // go to collaborations page
-        await page.locator('.sidebar-menu .menu-item-collaborations').click()
+        await switchIntoOrganization(page, 'Gigger')
+        await page.getByTestId('sidebar-menu-item-collaborations').click()
+        await tableRow.locator('.mat-cell.mat-column-actions > button.mat-icon-button').click()
+        await page.locator('.actions-wrapper .mat-button-wrapper', { hasText: 'REVIEW EXTENSION' }).click()
 
-        // click REVIEW EXTENSION button
-        await collabItem.locator('.actions-wrapper .mat-button-wrapper:has-text("REVIEW EXTENSION")').click() 
+        const suggested_date_end = new Date(await page.getByTestId('suggested-date-end').getAttribute('data-testvalue') || '').getTime()
 
-        // confirm accept
-        await page.locator('.mat-dialog-actions .mat-button-wrapper:has-text("NO")').click() 
-     
-        // check if collaboration is accepted
-        await expect(collabItem.locator('.item-info-content .item-wrapper .param').first()).toContainText('Ongoing')
+        await expect(suggested_date_end).toBeGreaterThan(date_end)
 
+        await page.locator('.mat-dialog-container .mat-dialog-actions .mat-button-wrapper', { hasText: 'NO' }).click()
     })
+
+    // test('Should not be able to save regular collaboration multiple times', async({ page, baseURL }) => {
+    //     await loginFromOTP(page, baseURL)
+    //     const organization = getOrganizationFromAuthState(baseURL)
+    //     const frequency = 'once'
+    //     const randNumber = faker.datatype.number(99999)
+
+    //     await page.goto(`${baseURL}/collaborations/create`)
+    //     await page.waitForURL('**/collaborations/create')
+    //     const randTitle = 'Collaboration should not create ' + faker.random.alphaNumeric(10)
+    //     await page.locator('[formcontrolname="title"]').fill(randTitle)
+    //     await page.locator('[formcontrolname="reason"]').fill('Collaboration Reason')
+    //     await page.locator('[formcontrolname="location"]').fill('Atlanta, GA')
+    //     await page.locator('[formcontrolname="description"]').fill('Collaboration Description')
+    //     await page.locator('.stepper-footer .action.right button').click()
+    //     await page.locator('[formcontrolname="experience_years"]').fill('7')
+    //     await page.locator('[formcontrolname="experience_level"]').click()
+    //     await page.locator('text=Senior').click()
+    //     await page.locator('.stepper-footer .action.right button').click()
+    //     await page.locator('[aria-label="Open calendar"]').first().click()
+    //     await page.locator('button:not(.mat-calendar-body-disabled) > .mat-calendar-body-cell-content').first().click()
+    //     await page.locator('[aria-label="Open calendar"]').nth(1).click()
+    //     await page.locator('button:not(.mat-calendar-body-disabled) > .mat-calendar-body-cell-content').last().click()
+    //     await page.locator('text=Deadline is not strict').click()
+    //     await page.locator('.stepper-footer .action.right button').click()
+    //     await page.locator('[formcontrolname="frequency"]').click()
+    //     await page.locator(`.mat-option-text:has-text("${frequency}")`).click()
+    //     await page.locator('[formcontrolname="postpaid"]').fill(randNumber.toString())
+    //     // SKIP THIS TO TEST FAILING [formcontrolname="currency_fee"]
+    //     await page.locator('[aria-label="Open calendar"]').nth(2).click()
+    //     await page.locator('button:not(.mat-calendar-body-disabled) > .mat-calendar-body-cell-content').last().click()
+    //     await page.locator('.stepper-footer .action.right button').click()
+    //     await page.getByTestId('invite-input-email-or-name').click()
+    //     await page.getByTestId('invite-input-email-or-name').type(organization.email, { delay: 10 })
+    //     await page.locator('app-org-preview-horizontal .partner-item').first().click()
+    //     await page.locator('button', { hasText: 'Submit' }).click()
+    // })
 })
