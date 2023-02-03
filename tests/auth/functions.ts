@@ -87,7 +87,11 @@ export async function signupOrgFromEmail(page: Page, orgType: string){
 	const email = 'e2etest' + randString + '@shoutlymail.com'
 	const password = demoUserPassword
   
-	await page.locator(`.provider-select.${orgType}`).click()
+	// Select org type
+	await page.locator(`.org-type-select.${orgType}`).click()
+	await page.getByTestId('org-type-confirm').click()
+
+	// Select signup method: email
 	await page.locator('.select-auth-method app-auth-provider-select .mat-card').nth(2).click()
   
 	await page.locator('input[formcontrolname="email"]').fill(email)
@@ -178,7 +182,10 @@ export async function createAnAgencyFromOtp(browser, request, baseURL, skipUserG
 
 		await page.goto(`${baseURL}/auth/signup`)
 
-		await page.locator('.select-user-type app-auth-provider-select .mat-card').nth(2).click()
+		// Select org type
+		await page.locator(`.org-type-select.${orgType}`).click()
+		if(orgType !== 'agency') await page.getByTestId('org-type-confirm').click()
+
 		await page.locator('.select-auth-method app-auth-provider-select .mat-card').nth(1).click()
 		await page.locator('input[formcontrolname="suffixPhone"]').type(phoneNumber)
 		await page.locator('app-otp .mat-flat-button.mat-button-disabled').waitFor({ state: 'hidden' })

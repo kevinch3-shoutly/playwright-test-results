@@ -20,25 +20,6 @@ export class AuthPage {
     
 	}
 
-	// async onboard(page, org_type){
-	// 	switch (org_type) {
-	// 	// case 'gigger':
-	// 	// 	await this.onboardGigger(page)
-	// 	// 	break
-
-	// 	case 'employer':
-	// 		await this.onboardEmployer(page)
-	// 		break
-
-	// 	case 'agency':
-	// 		await this.onboardAgency(page)
-	// 		break
-    
-	// 	default:
-	// 		break
-	// 	}
-	// }
-
 	async onboardEmployer(page: Page) {
 		const firstName = 'Testie'
 		const lastName = 'Employer'

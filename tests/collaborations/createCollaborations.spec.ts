@@ -4,7 +4,7 @@ import { CollaborationsPage } from '../../src/PageObjects/CollaborationPage'
 import { createAnAgencyFromOtp, loginFromOTP, switchIntoOrganization } from '../auth/functions'
 import { getOrganizationFromAuthState } from '../helpers'
 
-test.describe.serial('Create collaborations', () => {
+test.describe('Create collaborations', () => {
 
     test.beforeAll(async ({ browser, request, baseURL }) => {
         await createAnAgencyFromOtp(browser, request, baseURL)
@@ -52,8 +52,9 @@ test.describe.serial('Create collaborations', () => {
         const randNumber = faker.datatype.number(99999)
         await page.goto(`${baseURL}/collaborations/create`)
         await page.waitForURL('**/collaborations/create')
-        const randTitle = 'Collaboration should not create ' + faker.random.alphaNumeric(10)
-        await page.locator('[formcontrolname="title"]').fill(randTitle)
+        // SKIP THIS TO TEST FAIL
+        // const randTitle = 'Collaboration should not create ' + faker.random.alphaNumeric(10)
+        // await page.locator('[formcontrolname="title"]').fill(randTitle)
         await page.locator('[formcontrolname="reason"]').fill('Collaboration Reason')
         await page.locator('[formcontrolname="location"]').fill('Atlanta, GA')
         await page.locator('[formcontrolname="description"]').fill('Collaboration Description')
@@ -71,7 +72,6 @@ test.describe.serial('Create collaborations', () => {
         await page.locator('[formcontrolname="frequency"]').click()
         await page.locator(`.mat-option-text:has-text("${frequency}")`).click()
         await page.locator('[formcontrolname="postpaid"]').fill(randNumber.toString())
-        // SKIP THIS TO TEST FAILING [formcontrolname="currency_fee"]
         await page.locator('[aria-label="Open calendar"]').nth(2).click()
         await page.locator('button:not(.mat-calendar-body-disabled) > .mat-calendar-body-cell-content').last().click()
         await page.locator('.stepper-footer .action.right button').click()
@@ -79,7 +79,7 @@ test.describe.serial('Create collaborations', () => {
         await page.getByTestId('invite-input-email-or-name').type(organization.email, { delay: 10 })
         await page.locator('app-org-preview-horizontal .partner-item').first().click()
         await page.locator('button:has-text("Submit")').click()
-        await expect(page.locator('.server-errors > div b')).toHaveText('The selected currency fee is invalid.')
+        await expect(page.locator('.server-errors > div b')).toHaveText('The description.title field is required when title is not present.')
     })
 
     test('Should decline a collaboration', async({ page, baseURL }) => {
@@ -202,41 +202,4 @@ test.describe.serial('Create collaborations', () => {
 
         await page.locator('.mat-dialog-container .mat-dialog-actions .mat-button-wrapper', { hasText: 'NO' }).click()
     })
-
-    // test('Should not be able to save regular collaboration multiple times', async({ page, baseURL }) => {
-    //     await loginFromOTP(page, baseURL)
-    //     const organization = getOrganizationFromAuthState(baseURL)
-    //     const frequency = 'once'
-    //     const randNumber = faker.datatype.number(99999)
-
-    //     await page.goto(`${baseURL}/collaborations/create`)
-    //     await page.waitForURL('**/collaborations/create')
-    //     const randTitle = 'Collaboration should not create ' + faker.random.alphaNumeric(10)
-    //     await page.locator('[formcontrolname="title"]').fill(randTitle)
-    //     await page.locator('[formcontrolname="reason"]').fill('Collaboration Reason')
-    //     await page.locator('[formcontrolname="location"]').fill('Atlanta, GA')
-    //     await page.locator('[formcontrolname="description"]').fill('Collaboration Description')
-    //     await page.locator('.stepper-footer .action.right button').click()
-    //     await page.locator('[formcontrolname="experience_years"]').fill('7')
-    //     await page.locator('[formcontrolname="experience_level"]').click()
-    //     await page.locator('text=Senior').click()
-    //     await page.locator('.stepper-footer .action.right button').click()
-    //     await page.locator('[aria-label="Open calendar"]').first().click()
-    //     await page.locator('button:not(.mat-calendar-body-disabled) > .mat-calendar-body-cell-content').first().click()
-    //     await page.locator('[aria-label="Open calendar"]').nth(1).click()
-    //     await page.locator('button:not(.mat-calendar-body-disabled) > .mat-calendar-body-cell-content').last().click()
-    //     await page.locator('text=Deadline is not strict').click()
-    //     await page.locator('.stepper-footer .action.right button').click()
-    //     await page.locator('[formcontrolname="frequency"]').click()
-    //     await page.locator(`.mat-option-text:has-text("${frequency}")`).click()
-    //     await page.locator('[formcontrolname="postpaid"]').fill(randNumber.toString())
-    //     // SKIP THIS TO TEST FAILING [formcontrolname="currency_fee"]
-    //     await page.locator('[aria-label="Open calendar"]').nth(2).click()
-    //     await page.locator('button:not(.mat-calendar-body-disabled) > .mat-calendar-body-cell-content').last().click()
-    //     await page.locator('.stepper-footer .action.right button').click()
-    //     await page.getByTestId('invite-input-email-or-name').click()
-    //     await page.getByTestId('invite-input-email-or-name').type(organization.email, { delay: 10 })
-    //     await page.locator('app-org-preview-horizontal .partner-item').first().click()
-    //     await page.locator('button', { hasText: 'Submit' }).click()
-    // })
 })
