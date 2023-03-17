@@ -9,6 +9,41 @@ test.describe('Create collaborations', () => {
     test.beforeAll(async ({ browser, request, baseURL }) => {
         await createAnAgencyFromOtp(browser, request, baseURL)
     })
+
+    test('Should have a notification when incomplete collaboration is created', async({ page, baseURL }) => {
+        await loginFromOTP(page, baseURL)
+        const organization = getOrganizationFromAuthState(baseURL)
+        const randNumber = faker.datatype.number(99999)
+        await page.goto(`${baseURL}/collaborations/create`)
+        await page.waitForURL('**/collaborations/create')
+        const randTitle = 'Collaboration that fails to create'
+        await page.locator('[formcontrolname="title"]').fill(randTitle)
+        await page.locator('[formcontrolname="reason"]').fill('Collaboration Reason')
+        await page.locator('[formcontrolname="location"]').fill('Atlanta, GA')
+        await page.locator('[formcontrolname="description"]').fill('Collaboration Description')
+        await page.locator('.stepper-footer .action.right button').click()
+        await page.locator('[formcontrolname="experience_years"]').fill('7')
+        await page.locator('[formcontrolname="experience_level"]').click()
+        await page.locator('text=Senior').click()
+        await page.locator('.stepper-footer .action.right button').click()
+        await page.locator('[aria-label="Open calendar"]').first().click()
+        await page.locator('[aria-label="Previous month"]').click({ clickCount: faker.datatype.number({ min: 1, max: 9 }) }) // click 0 to 9 times previous month
+        const calendarDayStartDays = await page.locator('button:not(.mat-calendar-body-disabled) > .mat-calendar-body-cell-content').all()
+        await calendarDayStartDays[faker.datatype.number(calendarDayStartDays.length - 1)].click()
+        await page.locator('text=Deadline is not strict').click()
+        await page.locator('.stepper-footer .action.right button').click()
+        await page.locator('[formcontrolname="frequency"]').click()
+        await page.locator('.mat-option-text:has-text("once")').click()
+        await page.locator('[formcontrolname="postpaid"]').fill(randNumber.toString())
+        await page.locator('[formcontrolname="currency_fee"]').click()
+        await page.locator('.mat-option-text:has-text(\'Consultant\')').click()
+        await page.locator('.stepper-footer .action.right button').click()
+        await page.getByTestId('invite-input-email-or-name').click()
+        await page.getByTestId('invite-input-email-or-name').type(organization.email, { delay: 10 })
+        await page.locator('app-org-preview-horizontal .partner-item').first().click()
+        await page.locator('button:has-text("Submit")').click()
+        await expect(page.locator('.server-errors')).toBeVisible()
+    })
     
     test('Should create an express collaboration', async({ page, baseURL }) => {
         await loginFromOTP(page, baseURL)

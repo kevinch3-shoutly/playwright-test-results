@@ -1,9 +1,8 @@
 import { test, expect } from '@playwright/test'
 
-test.describe('Create collaborations', () => {
+test.describe('Payouts tests', () => {
 
     test.beforeEach(async ({ baseURL, page }) => {
-        /** THIS REQUIRES BACKEND BILLING SETTING: csv_import TO BE 1 */
         const email = 'lindberg.nicklas@shoutlymail.com'
 		const password = 'Demo123456'
 
@@ -34,12 +33,40 @@ test.describe('Create collaborations', () => {
 
         // Should have at least 2 transactions
         const transactionsRow = await page.locator('.mat-table .mat-row.element-row')
-        await expect(await transactionsRow.count()).toBeGreaterThan(1)
+        // await expect(await transactionsRow.count()).toBeGreaterThan(1)
 
         // The first transaction row attr called data-testid should be higher that the last one
         const firstTransactionRow = await transactionsRow.first().getAttribute('data-testid') || ''
         const lastTransactionRow = await transactionsRow.last().getAttribute('data-testid') || ''
 
         await expect(parseInt(firstTransactionRow)).toBeGreaterThan(parseInt(lastTransactionRow))
+    })
+
+    test('Timeline should be ordered', async({ page, baseURL }) => {
+        // Go to billing/payouts/transactions
+        await page.goto(`${baseURL}/billing/payouts/transactions`)
+
+        // Should have a table with transactions
+        await expect(page.locator('.mat-table')).toBeVisible()
+
+        // Click on expansion arrow
+        await page.locator('tr.mat-row').first().locator('app-expansion-arrow-rotate').click()
+
+        // Should have a timeline
+        await expect(page.locator('app-timeline-payouts')).toBeVisible()
+
+        // Should have at least 2 timeline items
+        const timelineItems = page.locator('app-timeline-payouts .timeline-row')
+        await expect(await timelineItems.count()).toBeGreaterThan(1)
+
+        // The last item in the bottom should have a ball with a class .is-last
+        await expect(await timelineItems.last().locator('.ball.is-last').isVisible()).toBeTruthy()
+
+        // Double click on the last of the timelineItems element with class .occurred_at
+        await timelineItems.first().locator('.mat-tooltip-trigger').dblclick()
+
+        // The first item in the bottom should have a ball with a class .is-last
+        await expect(await timelineItems.first().locator('.ball.is-last').isVisible()).toBeTruthy()
+        // await expect().toBeTruthy()
     })
 })

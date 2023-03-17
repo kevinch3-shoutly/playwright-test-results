@@ -1,6 +1,7 @@
-import { apiUrl } from './../vars'
 import { test, expect } from '@playwright/test'
 import { createAnAgencyFromOtp, loginFromOTP } from './functions'
+import * as dotenv from 'dotenv'
+dotenv.config()
 
 test.describe('Login with email', () => {
 	test.beforeEach(async ({ page, baseURL }) => {
@@ -53,6 +54,21 @@ test.describe('Login with email', () => {
 
 test.describe('Login with OTP', () => {
 
+	test('should be able to input a german number', async ({ page, baseURL }) => {
+		await page.goto(`${baseURL}/auth/login`)
+		await page.locator('app-auth-provider-select .mat-card h3').nth(1).click()
+		
+		await page.locator('mat-select[formcontrolname="prefixPhone"]').click()
+		await page.locator('mat-select[formcontrolname="prefixPhone"]').type('49')
+		await page.locator('.mat-option-text:has-text("Germany")').click()
+
+		await page.locator('input[formcontrolname="suffixPhone"]').type('15755730212')
+		await page.locator('app-otp .mat-flat-button.mat-button-disabled').waitFor({ state: 'hidden' })
+		await page.locator('app-otp .mat-flat-button').click()
+		expect(await page.locator('input[formcontrolname="code"]').isVisible())
+
+	}) 
+
 	test('should go to dashboard after login when credentials valid', async ({ browser, request, page, baseURL }) => {
 		await createAnAgencyFromOtp(browser, request, baseURL)
 		await loginFromOTP(page, baseURL)
@@ -60,7 +76,7 @@ test.describe('Login with OTP', () => {
 
 	test('should give an error and show mobile number input', async ({ request, page, baseURL }) => {
 
-		const response = await request.delete(`${apiUrl}/user/test`)
+		const response = await request.delete(`${process.env.API_URL}/user/test`)
 		expect(response.ok()).toBeTruthy()
 
 		await page.goto(`${baseURL}/auth/login`)

@@ -1,8 +1,51 @@
 import { fillOrgSettings, fillUserSettings, generateOrgPayout } from './functions'
 import { AuthPage } from '../../src/PageObjects/AuthPage'
 import { test, expect } from '@playwright/test'
+import { faker } from '@faker-js/faker'
+import * as dotenv from 'dotenv'
+dotenv.config()
 
 test.describe('Create accounts', async () => {
+
+	test.describe('Tests for email passwords', () => {
+		test('Should reject invalid passwords', async ({ page, baseURL }) => {
+			await page.goto(baseURL + '/auth/signup')
+			const randString = faker.random.alphaNumeric(10)
+			const email = 'e2etest' + randString + '@shoutlymail.com'
+		
+			// Select org type
+			await page.locator('.org-type-select.gigger').click()
+			await page.getByTestId('org-type-confirm').click()
+		
+			// Select signup method: email
+			await page.locator('.select-auth-method app-auth-provider-select .mat-card').nth(2).click()
+		
+			await page.locator('input[formcontrolname="email"]').fill(email)
+
+			await page.locator('input[formcontrolname="password"]').fill(process.env.DEMO_USER_PASSWORD as string)
+		
+			await expect(page.locator('app-email .mat-flat-button')).toHaveClass(/mat-button-disabled/)
+		})
+
+		test('Should accept valid password', async ({ page, baseURL }) => {
+			await page.goto(baseURL + '/auth/signup')
+			const randString = faker.random.alphaNumeric(10)
+			const email = 'e2etest' + randString + '@shoutlymail.com'
+		
+			// Select org type
+			await page.locator('.org-type-select.gigger').click()
+			await page.getByTestId('org-type-confirm').click()
+		
+			// Select signup method: email
+			await page.locator('.select-auth-method app-auth-provider-select .mat-card').nth(2).click()
+		
+			await page.locator('input[formcontrolname="email"]').fill(email)
+
+			await page.locator('input[formcontrolname="password"]').fill('Demo123456..')
+		
+			await expect(page.locator('app-email .mat-flat-button')).not.toHaveClass(/mat-button-disabled/)
+		})
+	})
 
 	test.describe('Tests for employer', () => {
 		test.beforeEach(async ({ page, baseURL }) => {
@@ -74,7 +117,6 @@ test.describe('Create accounts', async () => {
 					const transfer_type = 'iban'
 					
 					await page.getByTestId('org_payout_method_bank').click()
-					await page.getByRole('combobox', { name: 'Bank country' }).locator('span').click()
 					await page.locator('#org_payout_bank_country_SE').click()
 					await page.getByTestId('isfetching').waitFor({ state: 'detached' })
 					await page.getByTestId('org_payout_transfer_type').click()
@@ -107,7 +149,7 @@ test.describe('Create accounts', async () => {
 					const transfer_type = 'iban'
 	
 					await page.getByTestId('org_payout_method_bank').click()
-					await page.getByRole('combobox', { name: 'Bank country' }).locator('span').click()
+					
 					await page.locator('#org_payout_bank_country_SE').click()
 					await page.getByTestId('isfetching').waitFor({ state: 'detached' })
 					await page.getByTestId('org_payout_transfer_type').click()
@@ -139,7 +181,7 @@ test.describe('Create accounts', async () => {
 					const transfer_type = 'swift_code'
 	
 					await page.getByTestId('org_payout_method_bank').click()
-					await page.getByRole('combobox', { name: 'Bank country' }).locator('span').click()
+					
 					await page.locator('#org_payout_bank_country_SE').click()
 					await page.getByTestId('isfetching').waitFor({ state: 'detached' })
 					await page.getByTestId('org_payout_transfer_type').click()
@@ -175,7 +217,7 @@ test.describe('Create accounts', async () => {
 					const state = 'CA'
 
 					await page.getByTestId('org_payout_method_bank').click()
-					await page.getByRole('combobox', { name: 'Bank country' }).locator('span').click()
+					
 					await page.locator('#org_payout_bank_country_' + bank_country).click()
 					await page.getByTestId('isfetching').waitFor({ state: 'detached' })
 					await page.getByTestId('org_payout_transfer_type').click()
@@ -215,7 +257,7 @@ test.describe('Create accounts', async () => {
 					const state = 'ON'
 
 					await page.getByTestId('org_payout_method_bank').click()
-					await page.getByRole('combobox', { name: 'Bank country' }).locator('span').click()
+					
 					await page.locator('#org_payout_bank_country_' + bank_country).click()
 					await page.getByTestId('isfetching').waitFor({ state: 'detached' })
 					await page.getByTestId('org_payout_transfer_type').click()
@@ -252,7 +294,7 @@ test.describe('Create accounts', async () => {
 					const transfer_type = 'turkish_earthport'
 	
 					await page.getByTestId('org_payout_method_bank').click()
-					await page.getByRole('combobox', { name: 'Bank country' }).locator('span').click()
+					
 					await page.locator('#org_payout_bank_country_' + bank_country).click()
 					await page.getByTestId('isfetching').waitFor({ state: 'detached' })
 					await page.getByTestId('org_payout_transfer_type').click()
@@ -287,7 +329,7 @@ test.describe('Create accounts', async () => {
 					const transfer_type = 'iban'
 
 					await page.getByTestId('org_payout_method_bank').click()
-					await page.getByRole('combobox', { name: 'Bank country' }).locator('span').click()
+					
 					await page.locator('#org_payout_bank_country_' + bank_country).click()
 					await page.getByTestId('isfetching').waitFor({ state: 'detached' })
 					await page.getByTestId('org_payout_transfer_type').click()

@@ -19,11 +19,13 @@
   "homepage": "https://bitbucket.org/shoutlytech/e2e-shoutlyapp#readme",
   "devDependencies": {
     "@playwright/test": "1.29.2",
+    "@types/dotenv": "^8.2.0",
     "@typescript-eslint/eslint-plugin": "^5.48.2",
     "@typescript-eslint/parser": "^5.48.2",
     "eslint": "^8.32.0"
   },
   "dependencies": {
-    "@faker-js/faker": "^7.6.0"
+    "@faker-js/faker": "^7.6.0",
+    "dotenv": "^16.0.3"
   }
 }

@@ -1,7 +1,8 @@
 import { faker } from '@faker-js/faker'
 import { expect, Page } from '@playwright/test'
 import { handleAgreementAcceptance } from '../helpers'
-import { demoUserPassword, apiUrl } from '../vars'
+import * as dotenv from 'dotenv'
+dotenv.config()
 
 export interface TestUser{
     email?: string,
@@ -13,12 +14,12 @@ export interface TestUser{
 export const TEST_USERS: TestUser[] = [
 	{
 		email: 'lindberg.nicklas@shoutlymail.com',
-		password: demoUserPassword,
+		password: process.env.DEMO_USER_PASSWORD,
 		orgType: 'gigger'
 	},
 	{
 		email: 'jonsson.isabella@shoutlymail.com',
-		password: demoUserPassword,
+		password: process.env.DEMO_USER_PASSWORD,
 		orgType: 'employer'
 	}
 ]
@@ -85,7 +86,7 @@ export function generateOrgPayout () {
 export async function signupOrgFromEmail(page: Page, orgType: string){
 	const randString = faker.random.alphaNumeric(10)
 	const email = 'e2etest' + randString + '@shoutlymail.com'
-	const password = demoUserPassword
+	const password = 'Demo123456..'
   
 	// Select org type
 	await page.locator(`.org-type-select.${orgType}`).click()
@@ -176,8 +177,8 @@ export async function createAnAgencyFromOtp(browser, request, baseURL, skipUserG
 		// eslint-disable-next-line prefer-const
 		page = await browser.newPage()
 		const orgType = 'agency'
-	
-		const response = await request.delete(`${apiUrl}/user/test`)
+
+		const response = await request.delete(`${process.env.API_URL}/user/test`)
 		expect(response.ok()).toBeTruthy()
 
 		await page.goto(`${baseURL}/auth/signup`)
@@ -216,9 +217,10 @@ export async function createAnAgencyFromOtp(browser, request, baseURL, skipUserG
 		await page.waitForURL('**/dashboard?onboardvideo=true')
 
 		if (skipUserGuide){
-			const responsePromise = page.waitForResponse(response => response.url().includes('user/guide'))
+			const responsePromise = page.waitForResponse(response => response.url().endsWith('user/guide'))
 			await page.locator('.tour-buttons .skip-button').click()
 			await responsePromise
+
 		}
 		
 		await page.context().storageState({ path: 'auth-state.json' })

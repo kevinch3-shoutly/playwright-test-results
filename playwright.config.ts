@@ -1,10 +1,10 @@
 import { PlaywrightTestConfig } from '@playwright/test'
+import * as dotenv from 'dotenv'
+dotenv.config()
 
 const config: PlaywrightTestConfig = {
 	use: {
-		// baseURL: 'https://test.gigs.shoutly.com',
-		baseURL: 'https://demo.shoutly.com',
-		// baseURL: 'https://localhost:4200',
+		baseURL: process.env.BASE_URL,
 		headless: true,
 		ignoreHTTPSErrors: true,
 	},
