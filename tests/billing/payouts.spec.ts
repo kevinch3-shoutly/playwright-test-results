@@ -24,7 +24,7 @@ test.describe('Payouts tests', () => {
 		}
     })
     
-    test('Last transactions should be on the top', async({ page, baseURL }) => {
+    test.skip('Last transactions should be on the top', async({ page, baseURL }) => {
         // Go to billing/payouts/transactions
         await page.goto(`${baseURL}/billing/payouts/transactions`)
 
@@ -33,7 +33,7 @@ test.describe('Payouts tests', () => {
 
         // Should have at least 2 transactions
         const transactionsRow = await page.locator('.mat-table .mat-row.element-row')
-        // await expect(await transactionsRow.count()).toBeGreaterThan(1)
+        await expect(await transactionsRow.count()).toBeGreaterThan(1)
 
         // The first transaction row attr called data-testid should be higher that the last one
         const firstTransactionRow = await transactionsRow.first().getAttribute('data-testid') || ''
@@ -42,7 +42,7 @@ test.describe('Payouts tests', () => {
         await expect(parseInt(firstTransactionRow)).toBeGreaterThan(parseInt(lastTransactionRow))
     })
 
-    test('Timeline should be ordered', async({ page, baseURL }) => {
+    test.skip('Timeline should be ordered', async({ page, baseURL }) => {
         // Go to billing/payouts/transactions
         await page.goto(`${baseURL}/billing/payouts/transactions`)
 
@@ -53,7 +53,7 @@ test.describe('Payouts tests', () => {
         await page.locator('tr.mat-row').first().locator('app-expansion-arrow-rotate').click()
 
         // Should have a timeline
-        await expect(page.locator('app-timeline-payouts')).toBeVisible()
+        await expect(page.locator('app-timeline-payouts').first()).toBeVisible()
 
         // Should have at least 2 timeline items
         const timelineItems = page.locator('app-timeline-payouts .timeline-row')

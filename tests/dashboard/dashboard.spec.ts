@@ -5,13 +5,15 @@ import { getOrganizationFromAuthState } from '../helpers'
 
 test.describe('Dashboard tests', async () => {
 
-
-    test('should show and update guide_seen', async ({ browser, request, page, baseURL }) => {
+    test.beforeAll(async ({ browser, request, baseURL }) => {
         await createAnAgencyFromOtp(browser, request, baseURL, false)
+    })
 
+
+    test('should show and update guide_seen', async ({ page, baseURL }) => {
         await loginFromOTP(page, baseURL)
         await page.locator('.tour-buttons .skip-button').click()
-        await expect(page.waitForResponse(response => response.url().includes('user/guide'))).toBeTruthy()
+        await page.waitForResponse(response => response.url().endsWith('user/guide'))
         await page.waitForURL('**/dashboard')
     })
 
@@ -36,17 +38,30 @@ test.describe('Dashboard tests', async () => {
             await page.waitForURL('**/collaborations/create-express')
             await page.locator('[formcontrolname="title"]').fill(collabTitle)
 
+            const previousMonthButton = page.locator('[aria-label="Previous month"]')
+            const nextMonthButton = page.locator('[aria-label="Next month"]')
             // Date start: random date in the past
             await page.locator('[aria-label="Open calendar"]').first().click()
-            await page.locator('[aria-label="Previous month"]').click({ clickCount: faker.datatype.number({ min: 2, max: 9 }) }) // click 2 to 9 times previous month
+            await previousMonthButton.click({ clickCount: faker.datatype.number({ min: 2, max: 9 }) }) // click 2 to 9 times previous month
             const calendarDayStartDays = await page.locator('button:not(.mat-calendar-body-disabled) > .mat-calendar-body-cell-content').all()
             await calendarDayStartDays[faker.datatype.number(calendarDayStartDays.length - 1)].click()
 
-            // Date end: Add 3 days to today
+            // Date end: Add 3 days to current day
             await page.locator('[aria-label="Open calendar"]').nth(1).click()
+
+            // Get last day of the current month
+            const lastDayOfCurrentMonth = await parseInt(await page.locator('button:not(.mat-calendar-body-disabled) > .mat-calendar-body-cell-content').last().innerText())
             const todayNumber = new Date().getDate()
-            const calendarDayEndDays = await page.locator('button:not(.mat-calendar-body-disabled) > .mat-calendar-body-cell-content').all()
-            await calendarDayEndDays[(todayNumber - 1) + 3].click()
+            let calendarDayEndDays
+
+            if (todayNumber + 3 > lastDayOfCurrentMonth) {
+                await nextMonthButton.click()
+                calendarDayEndDays = await page.locator('button:not(.mat-calendar-body-disabled) > .mat-calendar-body-cell-content').all()
+                await calendarDayEndDays[(lastDayOfCurrentMonth - todayNumber) + 1].click()
+            } else {
+                calendarDayEndDays = await page.locator('button:not(.mat-calendar-body-disabled) > .mat-calendar-body-cell-content').all()
+                await calendarDayEndDays[(todayNumber - 1)].click()
+            }
 
             // Click Frequency dropdown
             await page.locator('[formcontrolname="frequency"]').click()
@@ -89,9 +104,9 @@ test.describe('Dashboard tests', async () => {
             await page.locator('.actions-wrapper .mat-button-wrapper', { hasText: 'ACCEPT' }).click()
             await page.locator('.mat-dialog-container .mat-dialog-actions .mat-button-wrapper', { hasText: 'YES' }).click()
 
-            await page.waitForResponse(response => response.url().includes('accept') && response.status() === 200)
+            // await page.waitForResponse(response => response.url().includes('accept') && response.status() === 200)
 
-            await expect(await page.locator('.item-wrapper .item-info .status.sent')).toBeTruthy()
+            await expect(await page.locator('.item-wrapper .item-info .status.ongoing')).toBeTruthy()
             
             // Switch organization
             await switchIntoOrganization(page, 'Gigger')

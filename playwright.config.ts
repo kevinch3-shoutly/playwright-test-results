@@ -8,8 +8,9 @@ const config: PlaywrightTestConfig = {
 		headless: true,
 		ignoreHTTPSErrors: true,
 	},
-	timeout: 160000,
-	retries: 3,
-	expect: { timeout: 25000 }
+	workers: 1,
+	timeout: 80000,
+	retries: 0,
+	expect: { timeout: 25000 },
 }
 export default config

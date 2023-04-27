@@ -21,7 +21,8 @@ test.describe('Collaboration listing assertions', () => {
         await page.locator('tr.mat-row', { hasText: titleID }).locator('.mat-cell.mat-column-actions > button.mat-icon-button').click()
         await page.locator('.actions-wrapper .mat-button-wrapper', { hasText: 'ACCEPT' }).click()
         await page.locator('.mat-dialog-container .mat-dialog-actions .mat-button-wrapper', { hasText: 'YES' }).click()
-        
+        await page.waitForResponse(response => response.url().includes('accept') && response.status() === 200)
+
         // go to page /collaborations
         await page.getByTestId('sidebar-menu-item-collaborations').click()
 

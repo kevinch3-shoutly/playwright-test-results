@@ -1,3 +1,4 @@
+import { faker } from '@faker-js/faker'
 import { Page } from '@playwright/test'
 import fs from 'fs'
 
@@ -43,4 +44,48 @@ export function lastDayOfNextMonth(date: Date) {
     const lastDayOfNextMonth = new Date(inputDate.getFullYear(), inputDate.getMonth() + 3, 0)
     const lastDayOfNextMonthString = lastDayOfNextMonth.toISOString().slice(0, 10)
     return lastDayOfNextMonthString
+}
+export interface csvInput { 
+    'Name': string
+    'Email': string
+    'Hours': string
+    'Amount': string
+    'Cost center': string
+    'Currency': string
+    'Fee': string
+    'Title': string
+}
+
+function arrayToCsv(data: object[]): string {
+    if (data.length === 0) return ''
+  
+    const header = Object.keys(data[0]).join(',') + '\n'
+    const rows = data.map(row => Object.values(row).join(',')).join('\n')
+  
+    return header + rows
+}
+
+export function createCsv (data: csvInput[]) {
+     // Convert data to CSV
+    const csvData = arrayToCsv(data)
+
+    // Convert the CSV data to a Buffer
+    const csvBuffer = Buffer.from(csvData, 'utf-8')
+
+    // Return an object with the expected properties
+    return {
+        name: 'spreadsheet-simple.csv',
+        mimeType: 'text/csv',
+        buffer: csvBuffer,
+    }
+}
+
+export function generateRandomTitles (length: number): string[] {
+    const result: string[] = []
+
+    for (let i = 0; i < length; i++) {
+        result.push(faker.random.alphaNumeric(12))
+    }
+
+    return result
 }

@@ -124,6 +124,8 @@ test.describe('Create accounts', async () => {
 					await page.getByTestId('org_payout_legal_type').click()
 					await page.getByRole('option', { name: 'Person' }).getByText('Person').click()
 					await page.getByPlaceholder('Account holder name').fill(payout.account_holder)
+					// Account number
+					// Clearing number
 					await page.getByTestId('org_payout_iban').fill(payout.iban)
 					await page.getByTestId('org_payout_bic').fill(payout.bic)
 					await page.getByTestId('org_payout_city').fill(payout.city)

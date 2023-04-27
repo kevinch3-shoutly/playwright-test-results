@@ -34,13 +34,13 @@ export class CollaborationsPage {
     await page.locator('[formcontrolname="title"]').fill(randTitle)
 
     // Date start: Open Calendar and choose a 
-    await page.locator('[aria-label="Open calendar"]').first().click()
+    await page.locator('.date-range > .mat-form-field .mdc-icon-button').first().click()
     await page.locator('[aria-label="Previous month"]').click({ clickCount: faker.datatype.number({ min: 2, max: 9 }) }) // click 2 to 9 times previous month
     const calendarDayStartDays = await page.locator('button:not(.mat-calendar-body-disabled) > .mat-calendar-body-cell-content').all()
     await calendarDayStartDays[faker.datatype.number(calendarDayStartDays.length - 1)].click()
 
     // Date end: Open Calendar and choose a 
-    await page.locator('[aria-label="Open calendar"]').nth(1).click()
+    await page.locator('.date-range > .mat-form-field .mdc-icon-button').last().click()
     await page.locator('[aria-label="Next month"]').click({ clickCount: faker.datatype.number({ min: 2, max: 9 }) }) // click 2 to 9 times next month
     const calendarDayEndDays = await page.locator('button:not(.mat-calendar-body-disabled) > .mat-calendar-body-cell-content').all()
     await calendarDayEndDays[faker.datatype.number(calendarDayEndDays.length - 1)].click()
