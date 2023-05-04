@@ -74,7 +74,7 @@ test.describe('Dashboard tests', async () => {
 
             // Set who pays the fee
             await page.locator('[formcontrolname="currency_fee"]').click()
-            await page.locator('.mat-option-text:has-text(\'Consultant\')').click()
+            await page.locator('mat-option[value="paid_by_gigger"]').click()
 
             // click payout day mat-select
             await page.locator('[aria-label="Open calendar"]').nth(2).click()

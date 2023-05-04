@@ -54,9 +54,11 @@ export class CollaborationsPage {
     // Set formcontrolname="postpaid" value
     await page.locator('[formcontrolname="postpaid"]').fill(randNumber.toString())
 
-    // Set who pays the fee
+    // Set who pays the fee z
     await page.locator('[formcontrolname="currency_fee"]').click()
-    await page.locator('.mat-option-text:has-text(\'Consultant\')').click()
+
+    // click on an mat-option with value "paid_by_gigger"
+    await page.locator('mat-option[value="paid_by_gigger"]').click()
     
     if(frequency === 'once'){
       // click payout day mat-select
@@ -176,7 +178,7 @@ export class CollaborationsPage {
     
     // Set who pays the fee
     await page.locator('[formcontrolname="currency_fee"]').click()
-    await page.locator('.mat-option-text:has-text(\'Consultant\')').click()
+    await page.locator('mat-option[value="paid_by_gigger"]').click()
 
         
     if(frequency === 'once'){

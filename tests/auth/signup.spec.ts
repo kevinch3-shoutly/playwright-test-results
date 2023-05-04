@@ -359,6 +359,8 @@ test.describe('Create accounts', async () => {
 				
 				// third step: Payment				
 				const payout = generateOrgPayout()
+
+				expect(await page.getByTestId('org_payout_method_paypal')).toBeVisible({ timeout: 3000 })
 				
 				await page.getByTestId('org_payout_method_paypal').click()
 				await page.getByTestId('org_payout_paypal_email').fill(payout.paypal_email)

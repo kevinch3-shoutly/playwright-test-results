@@ -40,7 +40,7 @@ test.describe('Create collaborations', () => {
         await page.locator('.mat-option-text:has-text("once")').click()
         await page.locator('[formcontrolname="postpaid"]').fill(randNumber.toString())
         await page.locator('[formcontrolname="currency_fee"]').click()
-        await page.locator('.mat-option-text:has-text(\'Consultant\')').click()
+        await page.locator('mat-option[value="paid_by_gigger"]').click()
         await page.locator('.stepper-footer .action.right button').click()
         // await page.getByTestId('invite-input-email-or-name').type(organization.email, { delay: 10 })
         // await page.locator('app-org-preview-horizontal .partner-item').first().click()
