@@ -18,7 +18,7 @@ jobs:
             - node_modules
       - run:
           name: Install Playwright
-          command: npx playwright install
+          command: npx playwright install --with-deps
       - run:
           name: Run Playwright Tests
           command: npx playwright test
