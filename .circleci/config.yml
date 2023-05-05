@@ -21,7 +21,7 @@ jobs:
           command: npx playwright install
       - run:
           name: Run Playwright Tests
-          command: npm Tests
+          command: npx playwright test
           
 workflows:
   build-playwright:
