@@ -21,7 +21,7 @@ jobs:
           command: npx playwright install --with-deps
       - run:
           name: Run Playwright Tests
-          command: npx playwright test --reporter=junit --output=test-results.xml
+          command: npx playwright test
       - store_test_results:
           path: ./test-results
           

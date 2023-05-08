@@ -16,6 +16,7 @@ const config: PlaywrightTestConfig = {
 		headless: true,
 		ignoreHTTPSErrors: true,
 	},
+	reporter: [['junit', { outputFile: 'test-results/test-results.xml' }]],
 	workers: 1,
 	timeout: parseInt(process.env.TIMEOUT ?? '30000'),
 	retries: parseInt(process.env.RETRIES ?? '0'),
