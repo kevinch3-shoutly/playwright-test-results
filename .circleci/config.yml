@@ -21,7 +21,7 @@ jobs:
           command: npx playwright install --with-deps
       - run:
           name: Run Playwright Tests
-          command: ENVIRONMENT=local npx playwright test --reporter=junit --output=playwright-test-results.xml
+          command: ENVIRONMENT=staging npx playwright test --reporter=junit --output=playwright-test-results.xml
       - store_test_results:
           path: /tmp/test-results
           
