@@ -25,7 +25,7 @@ test.describe('Dashboard tests', async () => {
             await createAnAgencyFromOtp(browser, request, baseURL, true)
         })
 
-        test('should not have a task with an "collab-ends-soon" slug', async ({ page, baseURL }) => {
+        test('should not have a task with an collab-ends-soon slug', async ({ page, baseURL }) => {
 
             const collabTitle = 'Collab once that ends soon'
 
@@ -51,18 +51,26 @@ test.describe('Dashboard tests', async () => {
 
             // Get last day of the current month
             const lastDayOfCurrentMonth = await parseInt(await page.locator('button:not(.mat-calendar-body-disabled) > .mat-calendar-body-cell-content').last().innerText())
+            
+            // Get the current day of the month
             const todayNumber = new Date().getDate()
+            // Store the days of the current month in an array
             let calendarDayEndDays
 
+            // If the current day + 3 is greater than the last day of the current month
             if (todayNumber + 3 > lastDayOfCurrentMonth) {
+                // Click the next month button
                 await nextMonthButton.click()
+                // Get the days of the next month
                 calendarDayEndDays = await page.locator('button:not(.mat-calendar-body-disabled) > .mat-calendar-body-cell-content').all()
+                // Click the last day of the current month
                 await calendarDayEndDays[(lastDayOfCurrentMonth - todayNumber) + 1].click()
             } else {
+                // Get the days of the current month
                 calendarDayEndDays = await page.locator('button:not(.mat-calendar-body-disabled) > .mat-calendar-body-cell-content').all()
-                await calendarDayEndDays[(todayNumber - 1)].click()
+                // Click the day 3 days from today
+                await calendarDayEndDays[(todayNumber + 3)].click()
             }
-
             // Click Frequency dropdown
             await page.locator('[formcontrolname="frequency"]').click()
 
