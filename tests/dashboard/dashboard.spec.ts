@@ -9,15 +9,12 @@ test.describe('Dashboard tests', async () => {
         await createAnAgencyFromOtp(browser, request, baseURL, false)
     })
 
-
     test('should show and update guide_seen', async ({ page, baseURL }) => {
         await loginFromOTP(page, baseURL)
         await page.locator('.tour-buttons .skip-button').click()
         await page.waitForResponse(response => response.url().endsWith('user/guide'))
         await page.waitForURL('**/dashboard')
     })
-
-    // test.describe('tests for summary', async () => {})
 
     test.describe('tests for todo-list', async () => {
 
@@ -129,6 +126,62 @@ test.describe('Dashboard tests', async () => {
             await expect(page.locator('app-to-do-tasks-table table')).not.toBeVisible()
         })
     })
+})
 
-    // test.describe('tests for payouts', async () => {})
+test.describe('tests using admin gigger', async () => {
+    test.beforeEach(async ({ page, baseURL }) => {
+		await page.goto(`${baseURL}/auth/login`)
+	})
+})
+
+test.describe('tests for block last transactions', async () => {
+
+    test.beforeEach(async ({ page, baseURL }) => {
+        const email = 'arne41@shoutlymail.com'
+        const password = process.env.DEMO_USER_PASSWORD || 'Demo123456'
+		await page.goto(`${baseURL}/auth/login`)
+		await page.locator('app-auth-provider-select .mat-card').nth(2).click()
+		await page.locator('app-email mat-form-field input').nth(0).type(email)
+		await page.locator('app-email mat-form-field input').nth(1).type(password)
+		await page.locator('app-email .mat-flat-button.mat-button-disabled').waitFor({ state: 'hidden' })
+		await page.locator('app-email .mat-flat-button').click()
+		await page.waitForURL('**/dashboard')
+	})
+
+    test('should show last transactions', async ({ page }) => {
+        // should contain the locator app-transactions-featured
+        await expect(page.locator('app-transactions-featured')).toBeVisible()
+
+        // should a table with class .transactions-table
+        await expect(page.locator('app-transactions-featured .transactions-table')).toBeVisible()
+
+        // Should have at least 2 transactions
+        const transactionsRow = await page.locator('app-transactions-featured .transactions-table .mat-row.element-row')
+        await expect(await transactionsRow.count()).toBeGreaterThan(1)
+
+        // The first transaction row attr called data-testid should be higher that the last one
+        const firstTransactionRow = await transactionsRow.first().getAttribute('data-testid') || ''
+        const lastTransactionRow = await transactionsRow.last().getAttribute('data-testid') || ''
+
+        await expect(parseInt(firstTransactionRow)).toBeGreaterThan(parseInt(lastTransactionRow))
+
+    })
+})
+
+test.describe('tests using org with limited access', async () => {
+
+    test('should not show app-quick-actions-block', async ({ page }) => {
+        const email = 'subscriber@shoutlymail.com'
+        const password = process.env.DEMO_USER_PASSWORD || 'Demo123456'
+		await page.locator('app-auth-provider-select .mat-card').nth(2).click()
+		await page.locator('app-email mat-form-field input').nth(0).type(email)
+		await page.locator('app-email mat-form-field input').nth(1).type(password)
+
+		await page.locator('app-email .mat-flat-button.mat-button-disabled').waitFor({ state: 'hidden' })
+		await page.locator('app-email .mat-flat-button').click()
+
+		await page.waitForURL('**/dashboard')
+
+        await expect(page.locator('app-quick-actions-block')).not.toBeVisible()
+    })
 })

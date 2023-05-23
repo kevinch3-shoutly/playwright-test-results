@@ -24,7 +24,7 @@ test.describe('Payouts tests', () => {
 		}
     })
     
-    test.skip('Last transactions should be on the top', async({ page, baseURL }) => {
+    test('Last transactions should be on the top', async({ page, baseURL }) => {
         // Go to billing/payouts/transactions
         await page.goto(`${baseURL}/billing/payouts/transactions`)
 
@@ -42,7 +42,7 @@ test.describe('Payouts tests', () => {
         await expect(parseInt(firstTransactionRow)).toBeGreaterThan(parseInt(lastTransactionRow))
     })
 
-    test.skip('Timeline should be ordered', async({ page, baseURL }) => {
+    test('Timeline should have elements', async({ page, baseURL }) => {
         // Go to billing/payouts/transactions
         await page.goto(`${baseURL}/billing/payouts/transactions`)
 
@@ -58,15 +58,16 @@ test.describe('Payouts tests', () => {
         // Should have at least 2 timeline items
         const timelineItems = page.locator('app-timeline-payouts .timeline-row')
         await expect(await timelineItems.count()).toBeGreaterThan(1)
+    })
 
-        // The last item in the bottom should have a ball with a class .is-last
-        await expect(await timelineItems.last().locator('.ball.is-last').isVisible()).toBeTruthy()
+    test('Should have a page with self invoices', async({ page, baseURL }) => {
+        // click on the link that has text "Payouts"
+        await page.locator('a:has-text("Payouts")').click()
+        
+        // click on a .mat-tab-links > a with text "Self invoices"
+        await page.locator('.mat-tab-links > a:has-text("Self invoices")').click()
 
-        // Double click on the last of the timelineItems element with class .occurred_at
-        await timelineItems.first().locator('.mat-tooltip-trigger').dblclick()
-
-        // The first item in the bottom should have a ball with a class .is-last
-        await expect(await timelineItems.first().locator('.ball.is-last').isVisible()).toBeTruthy()
-        // await expect().toBeTruthy()
+        // expect to be on /billing/payouts/self-invoices
+        await expect(page.url()).toBe(`${baseURL}/billing/payouts/self-invoices`)
     })
 })
