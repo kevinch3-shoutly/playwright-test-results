@@ -18,13 +18,13 @@ test.describe('Create accounts', async () => {
 			await page.getByTestId('org-type-confirm').click()
 		
 			// Select signup method: email
-			await page.locator('.select-auth-method app-auth-provider-select .mat-card').nth(2).click()
+			await page.locator('.select-auth-method app-auth-provider-select mat-card').nth(2).click()
 		
 			await page.locator('input[formcontrolname="email"]').fill(email)
 
 			await page.locator('input[formcontrolname="password"]').fill(process.env.DEMO_USER_PASSWORD as string)
 		
-			await expect(page.locator('app-email .mat-flat-button')).toHaveClass(/mat-button-disabled/)
+			await expect(page.locator('app-email button[type="submit"]')).toHaveAttribute('disabled', 'true')
 		})
 
 		test('Should accept valid password', async ({ page, baseURL }) => {
@@ -37,13 +37,13 @@ test.describe('Create accounts', async () => {
 			await page.getByTestId('org-type-confirm').click()
 		
 			// Select signup method: email
-			await page.locator('.select-auth-method app-auth-provider-select .mat-card').nth(2).click()
+			await page.locator('.select-auth-method app-auth-provider-select mat-card').nth(2).click()
 		
 			await page.locator('input[formcontrolname="email"]').fill(email)
 
-			await page.locator('input[formcontrolname="password"]').fill('Demo123456..')
+			await page.locator('input[formcontrolname="password"]').fill(process.env.NEW_USER_PASSWORD as string)
 		
-			await expect(page.locator('app-email .mat-flat-button')).not.toHaveClass(/mat-button-disabled/)
+			await expect(page.locator('app-email button[type="submit"]')).not.toHaveAttribute('disabled', 'true')
 		})
 	})
 
@@ -72,7 +72,7 @@ test.describe('Create accounts', async () => {
 				await page.waitForURL('**/dashboard?onboardvideo=true')
 
 				const currentOrgType = await page.locator('[aria-label="organization switcher"]').locator('.content-description .type').innerText()
-				expect(currentOrgType).toBe('Employer')
+				expect(currentOrgType.toLowerCase()).toBe('employer')
 		})
 	})
 

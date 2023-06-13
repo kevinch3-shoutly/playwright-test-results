@@ -4,7 +4,7 @@ dotenv.config()
 import path from 'path'
 
 // Load environment configuration based on the ENVIRONMENT environment variable
-const env = process.env.ENVIRONMENT || 'staging'
+const env = process.env.ENVIRONMENT || 'local'
 dotenv.config({ path: path.resolve(__dirname, `.env.${env}`) })
 
 // Print the environment name to the console

@@ -3,7 +3,7 @@ import { Page } from '@playwright/test'
 import fs from 'fs'
 
 async function scrollDownAgreement(page: Page) {
-    const agreementContentDialog = await page.locator('.mat-dialog-container .agreement-dialog-content > .agreement-dialog-content-text')
+    const agreementContentDialog = await page.locator('.agreement-dialog-content > .agreement-dialog-content-text')
     const agreementContentDialogBox = await agreementContentDialog.boundingBox() || { height: 0 }
     await page.mouse.wheel(0, (agreementContentDialogBox.height + 100))
   }

@@ -18,9 +18,9 @@ test.describe('Collaboration listing assertions', () => {
         await collaborationsPage.createExpressCollaboration(titleID)
         await switchIntoOrganization(page, 'Employer')
         await page.getByTestId('sidebar-menu-item-collaborations').click()
-        await page.locator('tr.mat-row', { hasText: titleID }).locator('.mat-cell.mat-column-actions > button.mat-icon-button').click()
-        await page.locator('.actions-wrapper .mat-button-wrapper', { hasText: 'ACCEPT' }).click()
-        await page.locator('.mat-dialog-container .mat-dialog-actions .mat-button-wrapper', { hasText: 'YES' }).click()
+        await page.locator('tr.mat-mdc-row', { hasText: titleID }).locator('.mat-column-actions > button.mdc-icon-button').click()
+        await page.locator('.actions-wrapper .mdc-button:first-child').click()
+        await page.locator('.mat-mdc-dialog-container .mdc-button:nth-child(2)').click()
         await page.waitForResponse(response => response.url().includes('accept') && response.status() === 200)
 
         // go to page /collaborations

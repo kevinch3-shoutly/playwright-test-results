@@ -24,7 +24,7 @@ test.describe('Dashboard tests', async () => {
 
         test('should not have a task with an collab-ends-soon slug', async ({ page, baseURL }) => {
 
-            const collabTitle = 'Collab once that ends soon'
+            const titleID = 'Collab once that ends soon'
 
             await loginFromOTP(page, baseURL)
 
@@ -33,7 +33,7 @@ test.describe('Dashboard tests', async () => {
             // Create a collaboration
             await page.goto(`${baseURL}/collaborations/create-express`)
             await page.waitForURL('**/collaborations/create-express')
-            await page.locator('[formcontrolname="title"]').fill(collabTitle)
+            await page.locator('[formcontrolname="title"]').fill(titleID)
 
             const previousMonthButton = page.locator('[aria-label="Previous month"]')
             const nextMonthButton = page.locator('[aria-label="Next month"]')
@@ -72,7 +72,8 @@ test.describe('Dashboard tests', async () => {
             await page.locator('[formcontrolname="frequency"]').click()
 
             // Click Frequency dropdown
-            await page.locator('.mat-option-text:has-text("once")').click()
+            // Click Frequency dropdown @TODO add FREQUENCY -- It's hardcoded "once"
+            await page.locator('mat-option[ng-reflect-value="once"]').click()
     
             // Set formcontrolname="postpaid" value
             await page.locator('[formcontrolname="postpaid"]').fill('200')
@@ -94,30 +95,24 @@ test.describe('Dashboard tests', async () => {
             await page.locator('app-org-preview-horizontal .partner-item').first().click()
 
             // Click button:has-text("Submit")
-            await page.locator('button:has-text("Submit")')
-            await page.locator('button:has-text("Submit")').click()
+            await page.locator('.stepper-footer .action.right button').click()
 
-            await expect(page.locator('.mat-snack-bar-container.info')).toBeVisible()
+            await expect(page.locator('.shoutly-snack-bar.info')).toBeVisible()
 
             // Switch organization
             await switchIntoOrganization(page, 'Employer')
 
             // Accept collaboration
-            const tableRow = page.locator('tr.mat-row', { hasText: collabTitle })
             await page.getByTestId('sidebar-menu-item-collaborations').click()
-            await tableRow.locator('.mat-cell.mat-column-actions > button.mat-icon-button').click()
-            await page.locator('.actions-wrapper .mat-button-wrapper', { hasText: 'ACCEPT' }).click()
-            await page.locator('.mat-dialog-container .mat-dialog-actions .mat-button-wrapper', { hasText: 'YES' }).click()
-
-            // await page.waitForResponse(response => response.url().includes('accept') && response.status() === 200)
+            const desiredRow = page.locator('tr.mat-mdc-row', { hasText: titleID })
+            await desiredRow.locator('.mat-column-actions > button.mdc-icon-button').click()
+            await page.locator('.actions-wrapper .mdc-button:nth-child(1)').click()
+            await page.locator('.mat-mdc-dialog-container .mdc-button:nth-child(2)').click()
 
             await expect(await page.locator('.item-wrapper .item-info .status.ongoing')).toBeTruthy()
             
             // Switch organization
             await switchIntoOrganization(page, 'Gigger')
-
-            // expect to be in the dashboard
-            await page.waitForURL('**/dashboard')
 
             // the locator app-to-do-tasks-table should be visible
             await expect(page.locator('app-to-do-tasks-table')).toBeVisible()
@@ -140,11 +135,11 @@ test.describe('tests for block last transactions', async () => {
         const email = 'arne41@shoutlymail.com'
         const password = process.env.DEMO_USER_PASSWORD || 'Demo123456'
 		await page.goto(`${baseURL}/auth/login`)
-		await page.locator('app-auth-provider-select .mat-card').nth(2).click()
+		await page.locator('app-auth-provider-select mat-card').nth(2).click()
 		await page.locator('app-email mat-form-field input').nth(0).type(email)
 		await page.locator('app-email mat-form-field input').nth(1).type(password)
-		await page.locator('app-email .mat-flat-button.mat-button-disabled').waitFor({ state: 'hidden' })
-		await page.locator('app-email .mat-flat-button').click()
+		await page.locator('app-email .mdc-button.mat-button-disabled').waitFor({ state: 'hidden' })
+		await page.locator('app-email .mdc-button').click()
 		await page.waitForURL('**/dashboard')
 	})
 
@@ -156,7 +151,7 @@ test.describe('tests for block last transactions', async () => {
         await expect(page.locator('app-transactions-featured .transactions-table')).toBeVisible()
 
         // Should have at least 2 transactions
-        const transactionsRow = await page.locator('app-transactions-featured .transactions-table .mat-row.element-row')
+        const transactionsRow = await page.locator('app-transactions-featured .transactions-table tr.element-row')
         await expect(await transactionsRow.count()).toBeGreaterThan(1)
 
         // The first transaction row attr called data-testid should be higher that the last one
@@ -169,16 +164,19 @@ test.describe('tests for block last transactions', async () => {
 })
 
 test.describe('tests using org with limited access', async () => {
-
+    test.beforeEach(async ({ page, baseURL }) => {
+		await page.goto(`${baseURL}/auth/login`)
+	})
+    
     test('should not show app-quick-actions-block', async ({ page }) => {
         const email = 'subscriber@shoutlymail.com'
         const password = process.env.DEMO_USER_PASSWORD || 'Demo123456'
-		await page.locator('app-auth-provider-select .mat-card').nth(2).click()
+		await page.locator('app-auth-provider-select mat-card').nth(2).click()
 		await page.locator('app-email mat-form-field input').nth(0).type(email)
 		await page.locator('app-email mat-form-field input').nth(1).type(password)
 
-		await page.locator('app-email .mat-flat-button.mat-button-disabled').waitFor({ state: 'hidden' })
-		await page.locator('app-email .mat-flat-button').click()
+		await page.locator('app-email .mdc-button.mat-button-disabled').waitFor({ state: 'hidden' })
+		await page.locator('app-email .mdc-button').click()
 
 		await page.waitForURL('**/dashboard')
 

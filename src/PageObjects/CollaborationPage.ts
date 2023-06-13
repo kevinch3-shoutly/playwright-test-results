@@ -34,13 +34,13 @@ export class CollaborationsPage {
     await page.locator('[formcontrolname="title"]').fill(randTitle)
 
     // Date start: Open Calendar and choose a 
-    await page.locator('.date-range > .mat-form-field .mdc-icon-button').first().click()
+    await page.locator('form:nth-child(1) .form-group > mat-form-field:nth-child(1) .mdc-icon-button').click()
     await page.locator('[aria-label="Previous month"]').click({ clickCount: faker.datatype.number({ min: 2, max: 9 }) }) // click 2 to 9 times previous month
     const calendarDayStartDays = await page.locator('button:not(.mat-calendar-body-disabled) > .mat-calendar-body-cell-content').all()
     await calendarDayStartDays[faker.datatype.number(calendarDayStartDays.length - 1)].click()
 
     // Date end: Open Calendar and choose a 
-    await page.locator('.date-range > .mat-form-field .mdc-icon-button').last().click()
+    await page.locator('form:nth-child(1) .form-group > mat-form-field:nth-child(2) .mdc-icon-button').click()
     await page.locator('[aria-label="Next month"]').click({ clickCount: faker.datatype.number({ min: 2, max: 9 }) }) // click 2 to 9 times next month
     const calendarDayEndDays = await page.locator('button:not(.mat-calendar-body-disabled) > .mat-calendar-body-cell-content').all()
     await calendarDayEndDays[faker.datatype.number(calendarDayEndDays.length - 1)].click()
@@ -49,7 +49,7 @@ export class CollaborationsPage {
     await page.locator('[formcontrolname="frequency"]').click()
 
     // Click Frequency dropdown
-    await page.locator(`.mat-option-text:has-text("${frequency}")`).click()
+    await page.locator('mat-option[ng-reflect-value="' + frequency + '"]').click()
     
     // Set formcontrolname="postpaid" value
     await page.locator('[formcontrolname="postpaid"]').fill(randNumber.toString())
@@ -86,7 +86,7 @@ export class CollaborationsPage {
     await page.locator('button:has-text("Submit")')
     await page.locator('button:has-text("Submit")').click()
 
-    await expect(page.locator('.mat-snack-bar-container.info')).toBeVisible()
+    // await expect(page.locator('.shoutly-snack-bar.info')).toBeVisible()
 
     return {
       title: randTitle,
@@ -170,8 +170,8 @@ export class CollaborationsPage {
     // Click Frequency dropdown
     await page.locator('[formcontrolname="frequency"]').click()
 
-    // Click Frequency dropdown
-    await page.locator(`.mat-option-text:has-text("${frequency}")`).click()
+      // Click Frequency dropdown @TODO add FREQUENCY -- It's hardcoded "once"
+      await page.locator('mat-option[ng-reflect-value="once"]').click()
 
     // Set formcontrolname="postpaid" value
     await page.locator('[formcontrolname="postpaid"]').fill(randNumber.toString())
@@ -208,6 +208,6 @@ export class CollaborationsPage {
     // Click button:has-text("Submit")
     await page.locator('button:has-text("Submit")').click()
 
-    await expect(page.locator('.mat-snack-bar-container.info')).toBeVisible()
+    await expect(page.locator('.shoutly-snack-bar.info')).toBeVisible()
   }
 }

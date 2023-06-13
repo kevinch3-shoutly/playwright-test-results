@@ -8,12 +8,12 @@ test.describe('Payouts tests', () => {
 
         await page.goto(`${baseURL}/auth/login`)
         
-		await page.locator('app-auth-provider-select .mat-card').nth(2).click()
+		await page.locator('app-auth-provider-select mat-card').nth(2).click()
 		await page.locator('app-email mat-form-field input').nth(0).type(email)
 		await page.locator('app-email mat-form-field input').nth(1).type(password)
 
-		await page.locator('app-email .mat-flat-button.mat-button-disabled').waitFor({ state: 'hidden' })
-		await page.locator('app-email .mat-flat-button').click()
+		await page.locator('app-email .mdc-button.mat-button-disabled').waitFor({ state: 'hidden' })
+		await page.locator('app-email .mdc-button').click()
 
 		await page.waitForURL('**/dashboard')
 
@@ -29,10 +29,10 @@ test.describe('Payouts tests', () => {
         await page.goto(`${baseURL}/billing/payouts/transactions`)
 
         // Should have a table with transactions
-        await expect(page.locator('.mat-table')).toBeVisible()
+        await expect(page.locator('.transactions-table')).toBeVisible()
 
         // Should have at least 2 transactions
-        const transactionsRow = await page.locator('.mat-table .mat-row.element-row')
+        const transactionsRow = await page.locator('.transactions-table .element-row')
         await expect(await transactionsRow.count()).toBeGreaterThan(1)
 
         // The first transaction row attr called data-testid should be higher that the last one
@@ -47,10 +47,10 @@ test.describe('Payouts tests', () => {
         await page.goto(`${baseURL}/billing/payouts/transactions`)
 
         // Should have a table with transactions
-        await expect(page.locator('.mat-table')).toBeVisible()
+        await expect(page.locator('.transactions-table')).toBeVisible()
 
         // Click on expansion arrow
-        await page.locator('tr.mat-row').first().locator('app-expansion-arrow-rotate').click()
+        await page.locator('tr.element-row').first().locator('app-expansion-arrow-rotate').click()
 
         // Should have a timeline
         await expect(page.locator('app-timeline-payouts').first()).toBeVisible()
@@ -62,10 +62,10 @@ test.describe('Payouts tests', () => {
 
     test('Should have a page with self invoices', async({ page, baseURL }) => {
         // click on the link that has text "Payouts"
-        await page.locator('a:has-text("Payouts")').click()
+        await page.getByTestId('sidebar-menu-item-payouts').click()
         
-        // click on a .mat-tab-links > a with text "Self invoices"
-        await page.locator('.mat-tab-links > a:has-text("Self invoices")').click()
+        // click on .mat-mdc-tab-links > a:nth-child(2)
+        await page.locator('.mat-mdc-tab-links > a:nth-child(2)').click()
 
         // expect to be on /billing/payouts/self-invoices
         await expect(page.url()).toBe(`${baseURL}/billing/payouts/self-invoices`)

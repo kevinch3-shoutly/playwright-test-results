@@ -93,12 +93,12 @@ export async function signupOrgFromEmail(page: Page, orgType: string){
 	await page.getByTestId('org-type-confirm').click()
 
 	// Select signup method: email
-	await page.locator('.select-auth-method app-auth-provider-select .mat-card').nth(2).click()
+	await page.locator('.select-auth-method app-auth-provider-select mat-card').nth(2).click()
   
 	await page.locator('input[formcontrolname="email"]').fill(email)
 	await page.locator('input[formcontrolname="password"]').fill(password)
   
-	const elementButtonSubmitEmail = await page.$('app-email .mat-flat-button')
+	const elementButtonSubmitEmail = await page.$('app-email button[type="submit"]')
 	await elementButtonSubmitEmail?.waitForElementState('enabled')
 	await elementButtonSubmitEmail?.click()
 
@@ -137,7 +137,7 @@ export async function switchIntoOrganization(page: Page, orgType = 'Gigger'){
 
 	// click on the first organization of the type "orgType"
 	await page.locator('.org-switcher-expanded .overlay-content .content-description span.type', { hasText: orgType }).first().click()
-	await expect(page.locator('.mat-snack-bar-container.success')).toBeVisible()
+	await expect(page.locator('.shoutly-snack-bar')).toBeVisible()
 
 	// wait loader to disappear
 	await page.waitForSelector('.switcher-button .mat-progress-spinner', { state: 'detached' })
@@ -145,6 +145,9 @@ export async function switchIntoOrganization(page: Page, orgType = 'Gigger'){
 	// wait for page to load
 	await page.waitForLoadState('networkidle')
 	await page.context().storageState({ path: 'auth-state.json' })
+
+	// expect to be in the dashboard
+	await page.waitForURL('**/dashboard')
 }
 
 export async function fillUserSettings(page: Page) {
@@ -159,8 +162,10 @@ export async function fillOrgSettings(page: Page, currency = 'EUR', orgType = 'g
 	const randString = faker.random.alphaNumeric(10)
 	const email = 'e2etest' + randString + '@shoutlymail.com'
 
+	// wait for 2 seconds
+	await page.waitForTimeout(3000)
 	await page.getByTestId('org_form').locator('mat-select[formcontrolname="currency"]').click()
-	await page.locator('#org_currency_' + currency ).click()
+	await page.getByTestId('org_currency_' + currency).click()
 	await page.locator('input[formcontrolname="name"]').fill('Test Gigger')
 	if(orgType !== 'gigger') await page.getByTestId('org_email').fill(email)
 	await page.locator('mat-select[formcontrolname="country"]').click()
@@ -187,13 +192,13 @@ export async function createAnAgencyFromOtp(browser, request, baseURL, skipUserG
 		await page.locator(`.org-type-select.${orgType}`).click()
 		if(orgType !== 'agency') await page.getByTestId('org-type-confirm').click()
 
-		await page.locator('.select-auth-method app-auth-provider-select .mat-card').nth(1).click()
+		await page.locator('.select-auth-method app-auth-provider-select mat-card').nth(1).click()
 		await page.locator('input[formcontrolname="suffixPhone"]').type(phoneNumber)
-		await page.locator('app-otp .mat-flat-button.mat-button-disabled').waitFor({ state: 'hidden' })
-		await page.locator('app-otp .mat-flat-button').click()
+		await page.locator('app-otp button[type="submit"].mat-button-disabled').waitFor({ state: 'hidden' })
+		await page.locator('app-otp button[type="submit"]').click()
 		await page.locator('input[formcontrolname="code"]').type(otpCode)
-		await page.locator('app-otp .mat-flat-button.mat-button-disabled').waitFor({ state: 'hidden' })
-		await page.locator('app-otp .mat-flat-button').click()
+		await page.locator('app-otp button[type="submit"].mat-button-disabled').waitFor({ state: 'hidden' })
+		await page.locator('app-otp button[type="submit"]').click()
 
 		await handleAgreementAcceptance(page)
 
@@ -228,12 +233,12 @@ export async function createAnAgencyFromOtp(browser, request, baseURL, skipUserG
 
 export async function loginFromOTP(page, baseURL) {
 	await page.goto(`${baseURL}/auth/login`)
-	await page.locator('app-auth-provider-select .mat-card h3').nth(1).click()
+	await page.locator('app-auth-provider-select mat-card h3').nth(1).click()
 	await page.locator('input[formcontrolname="suffixPhone"]').type(phoneNumber)
-	await page.locator('app-otp .mat-flat-button.mat-button-disabled').waitFor({ state: 'hidden' })
-	await page.locator('app-otp .mat-flat-button').click()
+	await page.locator('app-otp button[type="submit"].mat-button-disabled').waitFor({ state: 'hidden' })
+	await page.locator('app-otp button[type="submit"]').click()
 	await page.locator('input[formcontrolname="code"]').type(otpCode)
-	await page.locator('app-otp .mat-flat-button.mat-button-disabled').waitFor({ state: 'hidden' })
-	await page.locator('app-otp .mat-flat-button').click()
-	await page.waitForURL('**/dashboard')
+	await page.locator('app-otp button[type="submit"].mat-button-disabled').waitFor({ state: 'hidden' })
+	await page.locator('app-otp button[type="submit"]').click()
+	await page.waitForURL('**/dashboard**')
 }

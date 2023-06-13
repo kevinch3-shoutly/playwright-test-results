@@ -12,12 +12,12 @@ test.describe('Login with email', () => {
 		const email = 'irene.axelsson@shoutlymail.com'
 		const password = 'Demo123456'
 
-		await page.locator('app-auth-provider-select .mat-card').nth(2).click()
+		await page.locator('app-auth-provider-select mat-card').nth(2).click()
 		await page.locator('app-email mat-form-field input').nth(0).type(email)
 		await page.locator('app-email mat-form-field input').nth(1).type(password)
 
-		await page.locator('app-email .mat-flat-button.mat-button-disabled').waitFor({ state: 'hidden' })
-		await page.locator('app-email .mat-flat-button').click()
+		await page.locator('app-email button[type="submit"].mat-button-disabled').waitFor({ state: 'hidden' })
+		await page.locator('app-email button[type="submit"]').click()
 
 		await page.waitForURL('**/dashboard')
 	})
@@ -27,12 +27,12 @@ test.describe('Login with email', () => {
 		const email = 'irene.axelsson@shoutlymail.com'
 		const password = 'WrongPassword123'
 
-		await page.locator('app-auth-provider-select .mat-card h3').nth(2).click()
+		await page.locator('app-auth-provider-select mat-card h3').nth(2).click()
 		await page.locator('app-email mat-form-field input').nth(0).type(email)
 		await page.locator('app-email mat-form-field input').nth(1).type(password)
 
-		await page.locator('app-email .mat-flat-button.mat-button-disabled').waitFor({ state: 'hidden' })
-		await page.locator('app-email .mat-flat-button').click()
+		await page.locator('app-email button[type="submit"].mat-button-disabled').waitFor({ state: 'hidden' })
+		await page.locator('app-email button[type="submit"]').click()
 
 		await expect(page.locator('app-email .notice.auth-error')).toBeVisible()
 	})
@@ -41,12 +41,12 @@ test.describe('Login with email', () => {
 		const email = 'unknown@shoutlymail.com'
 		const password = 'Demo123456'
 
-		await page.locator('app-auth-provider-select .mat-card h3').nth(2).click()
+		await page.locator('app-auth-provider-select mat-card h3').nth(2).click()
 		await page.locator('app-email mat-form-field input').nth(0).type(email)
 		await page.locator('app-email mat-form-field input').nth(1).type(password)
 
-		await page.locator('app-email .mat-flat-button.mat-button-disabled').waitFor({ state: 'hidden' })
-		await page.locator('app-email .mat-flat-button').click()
+		await page.locator('app-email button[type="submit"].mat-button-disabled').waitFor({ state: 'hidden' })
+		await page.locator('app-email button[type="submit"]').click()
 
 		await expect(page.locator('.auth-error')).toBeVisible()
 	})
@@ -56,15 +56,15 @@ test.describe('Login with OTP', () => {
 
 	test('should be able to input a german number', async ({ page, baseURL }) => {
 		await page.goto(`${baseURL}/auth/login`)
-		await page.locator('app-auth-provider-select .mat-card h3').nth(1).click()
+		await page.locator('app-auth-provider-select mat-card h3').nth(1).click()
 		
 		await page.locator('mat-select[formcontrolname="prefixPhone"]').click()
 		await page.locator('mat-select[formcontrolname="prefixPhone"]').type('49')
-		await page.locator('.mat-option-text:has-text("Germany")').click()
+		await page.locator('mat-option:has-text("Germany")').click()
 
 		await page.locator('input[formcontrolname="suffixPhone"]').type('15755730212')
-		await page.locator('app-otp .mat-flat-button.mat-button-disabled').waitFor({ state: 'hidden' })
-		await page.locator('app-otp .mat-flat-button').click()
+		await page.locator('app-otp button[type="submit"].mat-button-disabled').waitFor({ state: 'hidden' })
+		await page.locator('app-otp button[type="submit"]').click()
 		expect(await page.locator('input[formcontrolname="code"]').isVisible())
 
 	}) 
@@ -80,13 +80,13 @@ test.describe('Login with OTP', () => {
 		expect(response.ok()).toBeTruthy()
 
 		await page.goto(`${baseURL}/auth/login`)
-		await page.locator('app-auth-provider-select .mat-card h3').nth(1).click()
+		await page.locator('app-auth-provider-select mat-card h3').nth(1).click()
 		await page.locator('input[formcontrolname="suffixPhone"]').type('7123456789')
-		await page.locator('app-otp .mat-flat-button.mat-button-disabled').waitFor({ state: 'hidden' })
-		await page.locator('app-otp .mat-flat-button').click()
+		await page.locator('app-otp button[type="submit"].mat-button-disabled').waitFor({ state: 'hidden' })
+		await page.locator('app-otp button[type="submit"]').click()
 		await page.locator('input[formcontrolname="code"]').type('123456')
-		await page.locator('app-otp .mat-flat-button.mat-button-disabled').waitFor({ state: 'hidden' })
-		await page.locator('app-otp .mat-flat-button').click()
+		await page.locator('app-otp button[type="submit"].mat-button-disabled').waitFor({ state: 'hidden' })
+		await page.locator('app-otp button[type="submit"]').click()
 		await expect(page.locator('.shoutly-snack-bar.error')).toBeVisible()
 	})
 })
