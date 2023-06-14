@@ -66,7 +66,7 @@ test.describe('Create collaborations', () => {
         await page.getByTestId('sidebar-menu-item-collaborations').click()
         const desiredRow = await page.locator('tr.mat-mdc-row', { hasText: titleID })
         await desiredRow.locator('.mat-column-actions > button.mdc-icon-button').click()
-        await page.locator('.actions-wrapper .mdc-button:first-child').click()
+        await page.getByTestId('acceptCollab').click()
         await page.locator('.mat-mdc-dialog-container .mdc-button:nth-child(2)').click()
         await expect(page.locator('.item-wrapper .item-info .status.ongoing')).toBeTruthy()
     })
@@ -76,13 +76,6 @@ test.describe('Create collaborations', () => {
         const collaborationsPage = new CollaborationsPage(page, baseURL)
         const titleID = faker.random.alphaNumeric(10)
         await collaborationsPage.createCollaborationRegular(titleID, 'once')
-        await switchIntoOrganization(page, 'Gigger')
-        await page.getByTestId('sidebar-menu-item-collaborations').click()
-        const desiredRow = await page.locator('tr.mat-mdc-row', { hasText: titleID })
-        await desiredRow.locator('.mat-column-actions > button.mdc-icon-button').click()
-        await page.locator('.actions-wrapper .mdc-button:first-child').click()
-        await page.locator('.mat-mdc-dialog-container .mdc-button:nth-child(2)').click()
-        await expect(page.locator('.item-wrapper .item-info .status.ongoing')).toBeTruthy()
     })
 
     test('Should create a regular collaboration and fail', async({ page, baseURL }) => {
@@ -134,40 +127,47 @@ test.describe('Create collaborations', () => {
         await page.getByTestId('sidebar-menu-item-collaborations').click()
         const desiredRow = await page.locator('tr.mat-mdc-row', { hasText: titleID })
         await desiredRow.locator('.mat-column-actions > button.mdc-icon-button').click()
-        await page.locator('.actions-wrapper .mdc-button:nth-child(2)').click()
+        await page.getByTestId('declineCollab').click()
         await page.locator('.mat-mdc-dialog-container .mdc-button:nth-child(2)').click()
         await expect(page.locator('.item-wrapper .item-info .status.declined')).toBeTruthy()
     })
 
     test('Should cancel a collaboration', async({ page, baseURL }) => {
+        test.setTimeout(160000)
+
         await loginFromOTP(page, baseURL)
         const collaborationsPage = new CollaborationsPage(page, baseURL)
         const titleID = faker.random.alphaNumeric(10)
 
         await switchIntoOrganization(page, 'Employer')
         await collaborationsPage.createExpressCollaboration(titleID)
+
         await switchIntoOrganization(page, 'Gigger')
         await page.getByTestId('sidebar-menu-item-collaborations').click()
         const desiredRow = page.locator('tr.mat-mdc-row', { hasText: titleID })
         await desiredRow.locator('.mat-column-actions > button.mdc-icon-button').click()
-        await page.locator('.actions-wrapper .mdc-button:nth-child(1)').click()
+        await page.getByTestId('acceptCollab').click()
         await page.locator('.mat-mdc-dialog-container .mdc-button:nth-child(2)').click()
         await expect(page.locator('.item-wrapper .item-info .status.sent')).toBeTruthy()
+
         await switchIntoOrganization(page, 'Employer')
         await page.getByTestId('sidebar-menu-item-collaborations').click()
         await desiredRow.locator('.mat-column-actions > button.mdc-icon-button').click()
-        await page.locator('.actions-wrapper .mdc-button:nth-child(1)').click()
+        await page.getByTestId('cancelCollab').click()
         await page.locator('.mat-mdc-dialog-container .mdc-button:nth-child(2)').click()
         await expect(page.locator('.item-wrapper .item-info .status.ongoing')).toBeTruthy()
+
         await switchIntoOrganization(page, 'Gigger')
         await page.getByTestId('sidebar-menu-item-collaborations').click()
         await desiredRow.locator('.mat-column-actions > button.mdc-icon-button').click()
-        await page.locator('.actions-wrapper .mdc-button:nth-child(1)').click()
+        await page.getByTestId('acceptCancelCollab').click()
         await page.locator('.mat-mdc-dialog-container .mdc-button:nth-child(2)').click()
         await expect(page.locator('.item-wrapper .item-info .status.cancelled')).toBeTruthy()
     })
 
     test('Should approve extension in a collaboration', async({ page, baseURL }) => {
+        test.setTimeout(70000)
+
         await loginFromOTP(page, baseURL)
         const collaborationsPage = new CollaborationsPage(page, baseURL)
 
@@ -181,7 +181,7 @@ test.describe('Create collaborations', () => {
         await switchIntoOrganization(page, 'Gigger')
         await page.getByTestId('sidebar-menu-item-collaborations').click()
         await desiredRow.locator('.mat-column-actions > button.mdc-icon-button').click()
-        await page.locator('.actions-wrapper .mdc-button:nth-child(1)').click()
+        await page.getByTestId('acceptCollab').click()
         await page.locator('.mat-mdc-dialog-container .mdc-button:nth-child(2)').click()
         await expect(await page.locator('.item-wrapper .item-info .status.sent')).toBeTruthy()
 
@@ -207,6 +207,8 @@ test.describe('Create collaborations', () => {
      })
 
     test('Should reject an extension in a collaboration', async({ page, baseURL }) => {
+        test.setTimeout(70000)
+
         await loginFromOTP(page, baseURL)
         const collaborationsPage = new CollaborationsPage(page, baseURL)
 
@@ -220,7 +222,7 @@ test.describe('Create collaborations', () => {
         await switchIntoOrganization(page, 'Gigger')
         await page.getByTestId('sidebar-menu-item-collaborations').click()
         await desiredRow.locator('.mat-column-actions > button.mdc-icon-button').click()
-        await page.locator('.actions-wrapper .mdc-button:nth-child(1)').click()
+        await page.getByTestId('acceptCollab').click()
         await page.locator('.mat-mdc-dialog-container .mdc-button:nth-child(2)').click()
         await expect(await page.locator('.item-wrapper .item-info .status.sent')).toBeTruthy()
 

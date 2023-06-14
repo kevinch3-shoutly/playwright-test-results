@@ -400,7 +400,7 @@ test.describe('Create accounts', async () => {
 				await page.getByTestId('org_payout_method_loading').waitFor({ state: 'detached' })
 				await expect(await page.getByTestId('org_payout_method_paypal').isVisible()).toBe(false)
 				await page.getByTestId('org_payout_currency').click()
-				await page.locator('#org_payout_currency_SEK').click()
+				await page.getByTestId('org_payout_currency_SEK').click()
 				await page.getByTestId('org_payout_method_loading').waitFor({ state: 'attached' })
 				await page.getByTestId('org_payout_method_loading').waitFor({ state: 'detached' })
 				await expect(await page.getByTestId('org_payout_method_paypal').isVisible()).toBe(true)

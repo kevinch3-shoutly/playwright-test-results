@@ -137,7 +137,7 @@ export async function switchIntoOrganization(page: Page, orgType = 'Gigger'){
 
 	// click on the first organization of the type "orgType"
 	await page.locator('.org-switcher-expanded .overlay-content .content-description span.type', { hasText: orgType }).first().click()
-	await expect(page.locator('.shoutly-snack-bar')).toBeVisible()
+	await expect(page.locator('.shoutly-snack-bar').first()).toBeVisible()
 
 	// wait loader to disappear
 	await page.waitForSelector('.switcher-button .mat-progress-spinner', { state: 'detached' })
@@ -161,10 +161,8 @@ export async function fillUserSettings(page: Page) {
 export async function fillOrgSettings(page: Page, currency = 'EUR', orgType = 'gigger', countryCode = 'SE') {
 	const randString = faker.random.alphaNumeric(10)
 	const email = 'e2etest' + randString + '@shoutlymail.com'
-
-	// wait for 2 seconds
-	await page.waitForTimeout(3000)
-	await page.getByTestId('org_form').locator('mat-select[formcontrolname="currency"]').click()
+	
+	await page.getByTestId('org_currency').click()
 	await page.getByTestId('org_currency_' + currency).click()
 	await page.locator('input[formcontrolname="name"]').fill('Test Gigger')
 	if(orgType !== 'gigger') await page.getByTestId('org_email').fill(email)
@@ -222,10 +220,8 @@ export async function createAnAgencyFromOtp(browser, request, baseURL, skipUserG
 		await page.waitForURL('**/dashboard?onboardvideo=true')
 
 		if (skipUserGuide){
-			const responsePromise = page.waitForResponse(response => response.url().endsWith('user/guide'))
 			await page.locator('.tour-buttons .skip-button').click()
-			await responsePromise
-
+			await page.waitForResponse(r => r.url().endsWith('user/guide'))
 		}
 		
 		await page.context().storageState({ path: 'auth-state.json' })

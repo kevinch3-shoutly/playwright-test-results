@@ -2,20 +2,20 @@
   "cookies": [
     {
       "name": "_ga",
-      "value": "GA1.1.491772069.1686677414",
+      "value": "GA1.1.114448122.1686732660",
       "domain": "localhost",
       "path": "/",
-      "expires": 1721237421.005837,
+      "expires": 1721292664.950116,
       "httpOnly": false,
       "secure": false,
       "sameSite": "Lax"
     },
     {
       "name": "_ga_RLCGTYVBLM",
-      "value": "GS1.1.1686677414.1.1.1686677435.0.0.0",
+      "value": "GS1.1.1686732659.1.1.1686732680.0.0.0",
       "domain": "localhost",
       "path": "/",
-      "expires": 1721237435.656691,
+      "expires": 1721292680.114314,
       "httpOnly": false,
       "secure": false,
       "sameSite": "Lax"
@@ -27,23 +27,23 @@
       "localStorage": [
         {
           "name": "user",
-          "value": "{\"id\":178,\"first_name\":\"Ismael\",\"last_name\":\"Hudson\",\"email\":null,\"language\":\"en\",\"created_at\":\"2023-06-13T17:29:57.000000Z\",\"updated_at\":\"2023-06-13T17:30:37.000000Z\",\"auth\":2,\"mobile\":\"467123456789\",\"email_verified_at\":null,\"avatar\":\"https://api.test.shoutly.com/v1/file/avatars/avatar-36.png\",\"current_org\":297,\"guide_seen\":true,\"name\":\"Ismael Hudson\",\"role\":{\"id\":1,\"name\":\"Owner\",\"slug\":\"owner\",\"created_at\":\"2023-06-02T10:58:44.000000Z\",\"updated_at\":\"2023-06-02T10:58:44.000000Z\",\"pivot\":{\"user_id\":178,\"role\":1}},\"position\":null,\"personal_number\":null,\"email_verified\":false}"
+          "value": "{\"id\":321,\"first_name\":\"Leora\",\"last_name\":\"Walter\",\"email\":null,\"language\":\"en\",\"created_at\":\"2023-06-14T08:50:46.000000Z\",\"updated_at\":\"2023-06-14T08:51:21.000000Z\",\"auth\":2,\"mobile\":\"467123456789\",\"email_verified_at\":null,\"avatar\":\"https://api.test.shoutly.com/v1/file/avatars/avatar-36.png\",\"current_org\":523,\"guide_seen\":true,\"name\":\"Leora Walter\",\"role\":{\"id\":1,\"name\":\"Owner\",\"slug\":\"owner\",\"created_at\":\"2023-06-02T10:58:44.000000Z\",\"updated_at\":\"2023-06-02T10:58:44.000000Z\",\"pivot\":{\"user_id\":321,\"role\":1}},\"position\":null,\"personal_number\":null,\"email_verified\":false}"
         },
         {
           "name": "org_payout",
-          "value": "{\"org_id\":297,\"type\":\"Paypal\",\"email\":null,\"wise\":null,\"paypal\":{\"paypal_email\":\"Erich.Stehr3@hotmail.com\"},\"swish\":null,\"currency\":\"SEK\"}"
+          "value": "{\"org_id\":523,\"type\":\"Paypal\",\"email\":null,\"wise\":null,\"paypal\":{\"paypal_email\":\"Rafaela.Pfannerstill@hotmail.com\"},\"swish\":null,\"currency\":\"SEK\"}"
         },
         {
           "name": "jwt_token",
-          "value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwczovL2FwaS50ZXN0LnNob3V0bHkuY29tL3YxL3Nlc3Npb24vbG9naW4iLCJpYXQiOjE2ODY2Nzc0MTgsImV4cCI6MTY4NjY4MTAxOCwibmJmIjoxNjg2Njc3NDE4LCJqdGkiOiI3MkJ6MmJ6aGI2REJRWVdkIiwic3ViIjoiMTc4IiwicHJ2IjoiMGUxYTk3OWM2MjdiM2I3ODlkM2U3ZGZlMjY3MWYzYzc0ODEzZjZlNyIsInVhIjoiTW96aWxsYS81LjAgKE1hY2ludG9zaDsgSW50ZWwgTWFjIE9TIFggMTBfMTVfNykgQXBwbGVXZWJLaXQvNTM3LjM2IChLSFRNTCwgbGlrZSBHZWNrbykgQ2hyb21lLzExMy4wLjAuMCBTYWZhcmkvNTM3LjM2IiwidWlkIjoxfQ.XsNIJBwAtbaahURXr84MXChxAAbQUOcujjxXi9qx42U"
+          "value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwczovL2FwaS50ZXN0LnNob3V0bHkuY29tL3YxL3Nlc3Npb24vbG9naW4iLCJpYXQiOjE2ODY3MzI2NjMsImV4cCI6MTY4NjczNjI2MywibmJmIjoxNjg2NzMyNjYzLCJqdGkiOiIxTWtzTjJPVWtIV3RJRlFwIiwic3ViIjoiMzIxIiwicHJ2IjoiMGUxYTk3OWM2MjdiM2I3ODlkM2U3ZGZlMjY3MWYzYzc0ODEzZjZlNyIsInVhIjoiTW96aWxsYS81LjAgKE1hY2ludG9zaDsgSW50ZWwgTWFjIE9TIFggMTBfMTVfNykgQXBwbGVXZWJLaXQvNTM3LjM2IChLSFRNTCwgbGlrZSBHZWNrbykgSGVhZGxlc3NDaHJvbWUvMTEzLjAuNTY3Mi41MyBTYWZhcmkvNTM3LjM2IiwidWlkIjoxfQ.PnsW1YMJfrNxh2-TitZCLur0Ui7SF0E4wEAoVtHdBec"
         },
         {
           "name": "organization",
-          "value": "{\"id\":297,\"type\":\"gigger\",\"agency\":296,\"currency\":\"SEK\",\"form\":\"Business\",\"name\":\"Test Gigger\",\"avatar\":\"https://api.test.shoutly.com/v1/file/avatars/avatar-36.png\",\"vat_number\":\"SE559219259401\",\"email\":\"e2etestd1qu7idgja@shoutlymail.com\",\"address1\":\"123 Test Street\",\"address2\":null,\"postcode\":\"123456\",\"city\":\"Stockholm\",\"country\":\"SE\",\"state\":null,\"generated_by\":null,\"theme_name\":null,\"logo\":null,\"active\":\"1\",\"created_at\":\"2023-06-13T17:29:57.000000Z\",\"updated_at\":\"2023-06-13T17:30:04.000000Z\",\"org_ready\":true,\"payout\":{\"org_id\":297,\"type\":\"Paypal\",\"email\":null,\"clearing\":null,\"us_routing_number\":null,\"iban\":null,\"bic\":null,\"bank_country\":null,\"uk_sort_code\":null,\"account\":null,\"legal_type\":null,\"transfer_type\":null,\"account_type\":null,\"city\":null,\"address1\":null,\"postcode\":null,\"account_holder\":null,\"clabe\":null,\"id_number\":null,\"ifsc\":null,\"state\":null,\"bank_code\":null,\"institution_number\":null,\"transit_number\":null,\"ssn\":null,\"swish_number\":null,\"paypal_email\":\"Erich.Stehr3@hotmail.com\"},\"type_internal\":\"agency\"}"
+          "value": "{\"id\":523,\"type\":\"gigger\",\"agency\":522,\"currency\":\"SEK\",\"form\":\"Business\",\"name\":\"Test Gigger\",\"avatar\":\"https://api.test.shoutly.com/v1/file/avatars/avatar-36.png\",\"vat_number\":\"SE559219259401\",\"email\":\"e2etest4wetoja3y9@shoutlymail.com\",\"address1\":\"123 Test Street\",\"address2\":null,\"postcode\":\"123456\",\"city\":\"Stockholm\",\"country\":\"SE\",\"state\":null,\"generated_by\":null,\"theme_name\":null,\"logo\":null,\"active\":\"1\",\"created_at\":\"2023-06-14T08:50:46.000000Z\",\"updated_at\":\"2023-06-14T08:50:52.000000Z\",\"org_ready\":true,\"payout\":{\"org_id\":523,\"type\":\"Paypal\",\"email\":null,\"clearing\":null,\"us_routing_number\":null,\"iban\":null,\"bic\":null,\"bank_country\":null,\"uk_sort_code\":null,\"account\":null,\"legal_type\":null,\"transfer_type\":null,\"account_type\":null,\"city\":null,\"address1\":null,\"postcode\":null,\"account_holder\":null,\"clabe\":null,\"id_number\":null,\"ifsc\":null,\"state\":null,\"bank_code\":null,\"institution_number\":null,\"transit_number\":null,\"ssn\":null,\"swish_number\":null,\"paypal_email\":\"Rafaela.Pfannerstill@hotmail.com\"},\"type_internal\":\"agency\"}"
         },
         {
           "name": "org_billing",
-          "value": "{\"org_id\":296,\"type\":\"pay-as-you-go\",\"email\":\"Perry16@gmail.com\",\"shoutly_fee_percent\":2.95,\"payout_day\":null,\"payment_term\":10,\"autoaccept\":false,\"template\":1,\"fee\":\"paid_by_employer\",\"currency_fee\":\"paid_by_employer\",\"csv_import\":false,\"import_accept\":1,\"payee_id\":null}"
+          "value": "{\"org_id\":522,\"type\":\"pay-as-you-go\",\"email\":\"Samanta_Kuphal@yahoo.com\",\"shoutly_fee_percent\":2.95,\"payout_day\":null,\"payment_term\":10,\"autoaccept\":false,\"template\":1,\"fee\":\"paid_by_employer\",\"currency_fee\":\"paid_by_employer\",\"csv_import\":false,\"import_accept\":1,\"payee_id\":null}"
         }
       ]
     }

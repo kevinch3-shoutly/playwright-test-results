@@ -13,11 +13,11 @@ export async function handleAgreementAcceptance(page: Page) {
     await scrollDownAgreement(page)
   
     // Button should be enabled
-    const elementButtonAcceptAgreement = await page.locator('app-agreement-dialog button', { hasText: 'Accept'})
+    const elementButtonAcceptAgreement = await page.locator('app-agreement-dialog .mat-mdc-dialog-actions button:nth-child(2)')
     await elementButtonAcceptAgreement.click()
   
     // click accept
-    await page.locator('app-agreement-dialog button:has-text("Accept")').click()  
+    await page.locator('app-agreement-dialog .mat-mdc-dialog-actions button:nth-child(2)').click()  
 
     // wait for page to be loaded
     await page.waitForNavigation({ waitUntil: 'load' })
