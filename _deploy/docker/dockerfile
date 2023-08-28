@@ -5,13 +5,20 @@ FROM mcr.microsoft.com/playwright:v1.37.0-jammy
 WORKDIR /usr/src/app
 
 # Copiamos el package.json y package-lock.json primero para aprovechar el caching de Docker
-COPY package*.json ./
+COPY package.json /usr/src/app/package.json
+
+# Listamos los archivos en el directorio de trabajo para debug
+RUN ls -al /usr/src/app/
 
 # Instalamos las dependencias del proyecto
-RUN npm install
+# Puedes añadir --verbose para más detalles en el log
+RUN npm install --verbose
 
 # Copiamos el resto del código del proyecto al contenedor
 COPY . .
+
+# Listamos los archivos otra vez para asegurarnos que todo se copió correctamente
+RUN ls -al /usr/src/app/
 
 # Corremos las pruebas
 CMD ["npm", "test"]
