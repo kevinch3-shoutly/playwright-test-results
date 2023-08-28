@@ -30,7 +30,7 @@ jobs:
       - image: cimg/node:18.16
     environment:
       IMAGE_NAME: shoutly/repo
-      ENVIRONMENT: test
+      # ENVIRONMENT: test
     resource_class: medium
     steps:
       - checkout
@@ -40,12 +40,12 @@ jobs:
       - run:
           name: Build Docker image
           command: |
-            docker build -t $IMAGE_NAME:playwright-$ENVIRONMENT-$CIRCLE_SHA1 .
+            docker build -f _deploy/docker/dockerfile -t $IMAGE_NAME:playwright-$CIRCLE_SHA1 .
       - run:
           name: Push Docker image
           command: |
             echo "$DOCKERHUB_PASS" | docker login -u "$DOCKERHUB_USERNAME" --password-stdin
-            docker push $IMAGE_NAME:playwright-$ENVIRONMENT-$CIRCLE_SHA1
+            docker push $IMAGE_NAME:playwright-$CIRCLE_SHA1
           
 workflows:
   build-playwright:

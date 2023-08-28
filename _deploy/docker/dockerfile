@@ -1,0 +1,17 @@
+# Usamos la imagen de Playwright como imagen base
+FROM mcr.microsoft.com/playwright:v1.37.0-jammy
+
+# Establecemos el directorio de trabajo en el contenedor
+WORKDIR /usr/src/app
+
+# Copiamos el package.json y package-lock.json primero para aprovechar el caching de Docker
+COPY package*.json ./
+
+# Instalamos las dependencias del proyecto
+RUN npm install
+
+# Copiamos el resto del código del proyecto al contenedor
+COPY . .
+
+# Corremos las pruebas
+CMD ["npm", "test"]
