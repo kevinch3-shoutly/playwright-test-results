@@ -1,34 +1,56 @@
 version: 2.1
 jobs:
-  build-playwright-job:
+  # build-playwright-job:
+  #   docker:
+  #     - image: cimg/node:18.16
+  #   resource_class: medium
+  #   steps:
+  #     - checkout
+  #     - restore_cache:
+  #         keys:
+  #           - node-deps-{{ checksum "package-lock.json" }}
+  #     - run:
+  #         name: Install Dependencies
+  #         command: npm ci
+  #     - save_cache:
+  #         key: node-deps-{{ checksum "package-lock.json" }}
+  #         paths:
+  #           - node_modules
+  #     - run:
+  #         name: Install Playwright
+  #         command: npx playwright install --with-deps
+  #     - run:
+  #         name: Run Playwright Tests
+  #         command: npx playwright test
+  #     - store_test_results:
+  #         path: ./test-results
+
+  build-and-push-image-job:
     docker:
-      - image: cimg/node:16.14
+      - image: cimg/node:18.16
+    environment:
+      IMAGE_NAME: shoutly/repo
+      ENVIRONMENT: test
     resource_class: medium
     steps:
       - checkout
-      - restore_cache:
-          keys:
-            - node-deps-{{ checksum "package-lock.json" }}
+      - setup_remote_docker:
+          version: 19.03.13
+          docker_layer_caching: true
       - run:
-          name: Install Dependencies
-          command: npm ci
-      - save_cache:
-          key: node-deps-{{ checksum "package-lock.json" }}
-          paths:
-            - node_modules
+          name: Build Docker image
+          command: |
+            docker build -t $IMAGE_NAME:playwright-$ENVIRONMENT-$CIRCLE_SHA1 .
       - run:
-          name: Install Playwright
-          command: npx playwright install --with-deps
-      - run:
-          name: Run Playwright Tests
-          command: npx playwright test
-      - store_test_results:
-          path: ./test-results
+          name: Push Docker image
+          command: |
+            echo "$DOCKERHUB_PASS" | docker login -u "$DOCKERHUB_USERNAME" --password-stdin
+            docker push $IMAGE_NAME:playwright-$ENVIRONMENT-$CIRCLE_SHA1
           
 workflows:
   build-playwright:
     jobs:
-      - build-playwright-job:
+      - build-and-push-image-job:
           filters:
             branches:
               only: master

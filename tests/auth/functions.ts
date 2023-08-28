@@ -238,3 +238,7 @@ export async function loginFromOTP(page, baseURL) {
 	await page.locator('app-otp button[type="submit"]').click()
 	await page.waitForURL('**/dashboard**')
 }
+
+export async function rejectCookies(page) {
+	await page.locator('app-cookie-consent button').nth(2).click()
+}

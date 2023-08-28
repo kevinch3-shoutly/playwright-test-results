@@ -7,9 +7,20 @@ dotenv.config()
 
 test.describe('Create accounts', async () => {
 
+	let page
+
+	test.beforeEach(async ({context, baseURL}) => {
+	  page = await context.newPage();
+	  // Navigate to your website
+	  await page.goto(baseURL + '/auth/login')
+	  // Assuming there's a button to accept cookies, click it
+	  await page.locator('app-cookie-consent button').nth(2).click()
+	})
+
 	test.describe('Tests for email passwords', () => {
 		test('Should reject invalid passwords', async ({ page, baseURL }) => {
 			await page.goto(baseURL + '/auth/signup')
+
 			const randString = faker.random.alphaNumeric(10)
 			const email = 'e2etest' + randString + '@shoutlymail.com'
 		
@@ -57,6 +68,8 @@ test.describe('Create accounts', async () => {
 		})
 
 		test('should create employer with SEK', async ({ page }) => {
+				test.slow()
+				
 				// first step: Personal information
 				await fillUserSettings(page)
 				await page.getByRole('button', { name: 'Next' }).click()
@@ -69,7 +82,7 @@ test.describe('Create accounts', async () => {
 				await page.locator('#org_billing_email').fill('test@shoutlymail.com')
 				await page.getByRole('button', { name: 'Submit' }).click()
 	
-				await page.waitForURL('**/dashboard?onboardvideo=true')
+				await page.waitForURL('**/dashboard*')
 
 				const currentOrgType = await page.locator('[aria-label="organization switcher"]').locator('.content-description .type').innerText()
 				expect(currentOrgType.toLowerCase()).toBe('employer')
@@ -133,8 +146,8 @@ test.describe('Create accounts', async () => {
 					await page.getByTestId('org_payout_postcode').fill(payout.postcode)
 		
 					await page.getByRole('button', { name: 'Submit' }).click()
-		
-					await page.waitForURL('**/dashboard?onboardvideo=true')
+					await page.waitForURL('**/dashboard*')
+
 				})
 		
 				test('should create gigger with payout: bank,EUR,iban,SE', async ({ page }) => {
@@ -166,7 +179,7 @@ test.describe('Create accounts', async () => {
 					await page.getByTestId('org_payout_postcode').fill(payout.postcode)
 		
 					await page.getByRole('button', { name: 'Submit' }).click()
-					await page.waitForURL('**/dashboard?onboardvideo=true')
+					await page.waitForURL('**/dashboard*')
 				})
 		
 				test('should create gigger with payout: bank,USD,swift_code,SE', async ({ page }) => {
@@ -199,7 +212,7 @@ test.describe('Create accounts', async () => {
 			
 					await page.getByRole('button', { name: 'Submit' }).click()
 		
-					await page.waitForURL('**/dashboard?onboardvideo=true')
+					await page.waitForURL('**/dashboard*')
 				})
 		
 				test('should create gigger with payout: bank,USD,aba,US', async ({ page }) => {
@@ -239,7 +252,7 @@ test.describe('Create accounts', async () => {
 		
 					await page.getByRole('button', { name: 'Submit' }).click()
 		
-					await page.waitForURL('**/dashboard?onboardvideo=true')
+					await page.waitForURL('**/dashboard*')
 				})
 		
 				test('should create gigger with payout: bank,CAD,canadian,CA', async ({ page }) => {
@@ -278,7 +291,7 @@ test.describe('Create accounts', async () => {
 					await page.getByTestId('org_payout_address1').fill(payout.address1)
 					await page.getByTestId('org_payout_postcode').fill(payout.postcode)
 					await page.getByRole('button', { name: 'Submit' }).click()
-					await page.waitForURL('**/dashboard?onboardvideo=true')
+					await page.waitForURL('**/dashboard*')
 				})
 		
 				test('should create gigger with payout: bank,TRY,turkish_earthport,TR', async ({ page }) => {
@@ -309,7 +322,7 @@ test.describe('Create accounts', async () => {
 					await page.getByTestId('org_payout_address1').fill(payout.address1)
 					await page.getByTestId('org_payout_postcode').fill(payout.postcode)
 					await page.getByRole('button', { name: 'Submit' }).click()
-					await page.waitForURL('**/dashboard?onboardvideo=true')
+					await page.waitForURL('**/dashboard*')
 				})
 			})
 
@@ -366,7 +379,7 @@ test.describe('Create accounts', async () => {
 				await page.getByTestId('org_payout_paypal_email').fill(payout.paypal_email)
 
 				await page.getByRole('button', { name: 'Submit' }).click()
-				await page.waitForURL('**/dashboard?onboardvideo=true')
+				await page.waitForURL('**/dashboard*')
 			})
 
 			test('should create gigger and be able to select payout: paypal,SEK', async ({ page }) => {

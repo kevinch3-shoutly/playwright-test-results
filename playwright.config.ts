@@ -15,6 +15,14 @@ const config: PlaywrightTestConfig = {
 		baseURL: process.env.BASE_URL,
 		headless: true,
 		ignoreHTTPSErrors: true,
+		viewport: { width: 1920, height: 1080 },
+		video: {
+			mode: 'on',
+			size: { width: 1920, height: 1080 }
+		},
+        launchOptions: {
+            slowMo: 30, // slow down by N ms, based on the SLOWMO env variable
+        },
 	},
 	reporter: [['junit', { outputFile: 'test-results/test-results.xml' }]],
 	workers: 1,
@@ -22,4 +30,5 @@ const config: PlaywrightTestConfig = {
 	retries: parseInt(process.env.RETRIES ?? '0'),
 	expect: { timeout: 25000 },
 }
+
 export default config
