@@ -7,14 +7,11 @@ WORKDIR /usr/src/app
 # Copiar el archivo package.json y package-lock.json
 COPY package*.json ./
 
-# Instalar las dependencias del proyecto
-RUN npm install
+# Install NPM packages
+RUN npm ci
+
+# Install Playwright browsers and dependencies
+RUN npx playwright install --with-deps
 
 # Copiar los archivos y directorios del proyecto al directorio de trabajo en la imagen
 COPY . .
-
-# Exponer el puerto en el que la aplicación se ejecutará
-EXPOSE 3000
-
-# Comando para ejecutar la aplicación
-CMD [ "node", "index.js" ]
