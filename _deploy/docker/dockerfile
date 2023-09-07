@@ -1,5 +1,5 @@
 # Node.js image
-FROM node:lts
+FROM node:latest
 
 # Establecer el directorio de trabajo en la imagen de Docker
 WORKDIR /usr/src/app
