@@ -1,18 +1,10 @@
 import { PlaywrightTestConfig } from '@playwright/test'
 import * as dotenv from 'dotenv'
 dotenv.config()
-import path from 'path'
-
-// Load environment configuration based on the ENVIRONMENT environment variable
-const env = process.env.ENVIRONMENT || 'local'
-dotenv.config({ path: path.resolve(__dirname, `.env.${env}`) })
-
-// Print the environment name to the console
-console.log(`Executing tests in the '${env}' environment.`)
 
 const config: PlaywrightTestConfig = {
 	use: {
-		baseURL: process.env.BASE_URL,
+		baseURL: process.env.BASE_URL ?? 'https://localhost:4200/',
 		headless: true,
 		ignoreHTTPSErrors: true,
 		viewport: { width: 1920, height: 1080 },

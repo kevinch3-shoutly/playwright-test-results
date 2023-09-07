@@ -1,17 +1,7 @@
-# Node.js image
 FROM node:latest
-
-# Establecer el directorio de trabajo en la imagen de Docker
 WORKDIR /usr/src/app
-
-# Copiar el archivo package.json y package-lock.json
 COPY package*.json ./
-
-# Install NPM packages
 RUN npm ci
-
-# Install Playwright browsers and dependencies
 RUN npx playwright install --with-deps chromium
-
-# Copiar los archivos y directorios del proyecto al directorio de trabajo en la imagen
 COPY . .
+CMD ["sh", "start-script.sh"]
