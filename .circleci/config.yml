@@ -3,6 +3,8 @@ jobs:
   build-and-push-image-job:
     docker:
       - image: cimg/node:18.16
+    environment:
+      IMAGE_NAME: shoutly/repo
     steps:
       - checkout
       - setup_remote_docker:
