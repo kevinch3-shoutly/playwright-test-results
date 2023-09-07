@@ -4,4 +4,3 @@ COPY package*.json ./
 RUN npm ci
 RUN npx playwright install --with-deps chromium
 COPY . .
-CMD ["sh", "start-script.sh"]
