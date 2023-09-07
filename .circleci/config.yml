@@ -14,12 +14,14 @@ jobs:
           name: Build Docker image
           command: |
             docker build -f _deploy/docker/dockerfile -t $IMAGE_NAME:playwright-$CIRCLE_SHA1 .
+            docker tag $IMAGE_NAME:playwright-$CIRCLE_SHA1 $IMAGE_NAME:latest
       - run:
           name: Push Docker image
           command: |
             echo "$DOCKERHUB_PASS" | docker login -u "$DOCKERHUB_USERNAME" --password-stdin
             docker push $IMAGE_NAME:playwright-$CIRCLE_SHA1
-          
+            docker push $IMAGE_NAME:latest
+
 workflows:
   build-playwright:
     jobs:
