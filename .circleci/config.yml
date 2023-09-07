@@ -1,41 +1,12 @@
 version: 2.1
 jobs:
-  # build-playwright-job:
-  #   docker:
-  #     - image: cimg/node:18.16
-  #   resource_class: medium
-  #   steps:
-  #     - checkout
-  #     - restore_cache:
-  #         keys:
-  #           - node-deps-{{ checksum "package-lock.json" }}
-  #     - run:
-  #         name: Install Dependencies
-  #         command: npm ci
-  #     - save_cache:
-  #         key: node-deps-{{ checksum "package-lock.json" }}
-  #         paths:
-  #           - node_modules
-  #     - run:
-  #         name: Install Playwright
-  #         command: npx playwright install --with-deps
-  #     - run:
-  #         name: Run Playwright Tests
-  #         command: npx playwright test
-  #     - store_test_results:
-  #         path: ./test-results
-
   build-and-push-image-job:
     docker:
       - image: cimg/node:18.16
-    environment:
-      IMAGE_NAME: shoutly/repo
-      # ENVIRONMENT: test
-    resource_class: medium
     steps:
       - checkout
       - setup_remote_docker:
-          version: 19.03.13
+          version: 20.10.7
           docker_layer_caching: true
       - run:
           name: Build Docker image
