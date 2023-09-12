@@ -181,7 +181,7 @@ export async function createAnAgencyFromOtp(browser, request, baseURL, skipUserG
 		page = await browser.newPage()
 		const orgType = 'agency'
 
-		const response = await request.delete(`${process.env.API_URL}/user/test`)
+		const response = await request.delete(`${process.env.API_URL}/v1/user/test`)
 		expect(response.ok()).toBeTruthy()
 
 		await page.goto(`${baseURL}/auth/signup`)

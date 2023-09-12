@@ -76,7 +76,7 @@ test.describe('Login with OTP', () => {
 
 	test('should give an error and show mobile number input', async ({ request, page, baseURL }) => {
 
-		const response = await request.delete(`${process.env.API_URL}/user/test`)
+		const response = await request.delete(`${process.env.API_URL}/v1/user/test`)
 		expect(response.ok()).toBeTruthy()
 
 		await page.goto(`${baseURL}/auth/login`)
