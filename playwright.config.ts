@@ -3,17 +3,17 @@ import * as dotenv from 'dotenv'
 dotenv.config()
 
 let reporter: ReporterDescription[] = [
-	['junit', { 
-		outputFile: 'test-results/test-results.xml' 
+	['junit', {
+		outputFile: 'test-results/test-results.xml'
 	}]
 ]
 
-if (process.argv.includes('--slack-reporter')) {
+if (process.env.SHOULD_USE_SLACK_REPORTER === 'true') {
 	reporter.push([
 		'./node_modules/playwright-slack-report/dist/src/SlackReporter.js',
 		{
 			channels: ['bugs'],
-			sendResults: 'always',
+			sendResults: 'on-failure',
 			slackOAuthToken: process.env.SLACK_BOT_USER_OAUTH_TOKEN
 		}
 	])
@@ -32,8 +32,11 @@ const config: PlaywrightTestConfig = {
 		launchOptions: {
 			slowMo: 30,
 		},
+		trace: 'on-first-retry',
+		screenshot: "only-on-failure",
 	},
 	workers: 1,
+	
 	timeout: parseInt(process.env.TIMEOUT ?? '30000'),
 	retries: parseInt(process.env.RETRIES ?? '0'),
 	expect: { timeout: 25000 },
