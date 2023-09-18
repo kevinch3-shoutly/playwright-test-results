@@ -1,4 +1,5 @@
 import { test, expect } from '@playwright/test'
+import { closeCookieConsentBar, trySkipUserGuide } from '../helpers'
 
 test.describe('Payouts tests', () => {
 
@@ -7,6 +8,7 @@ test.describe('Payouts tests', () => {
 		const password = 'Demo123456'
 
         await page.goto(`${baseURL}/auth/login`)
+        await closeCookieConsentBar(page)
         
 		await page.locator('app-auth-provider-select mat-card').nth(2).click()
 		await page.locator('app-email mat-form-field input').nth(0).type(email)
@@ -17,11 +19,7 @@ test.describe('Payouts tests', () => {
 
 		await page.waitForURL('**/dashboard')
 
-        const skipUserGuide = await page.locator('.tour-buttons .skip-button').isVisible()
-
-        if (skipUserGuide){
-			await page.locator('.tour-buttons .skip-button').click()
-		}
+        await trySkipUserGuide(page)
     })
     
     test('Last transactions should be on the top', async({ page, baseURL }) => {

@@ -24,10 +24,10 @@ const config: PlaywrightTestConfig = {
 		baseURL: process.env.BASE_URL,
 		headless: true,
 		ignoreHTTPSErrors: true,
-		viewport: { width: 1920, height: 1080 },
+		viewport: { width: 1280, height: 720 },
 		video: {
 			mode: 'on',
-			size: { width: 1920, height: 1080 },
+			size: { width: 1280, height: 720 },
 		},
 		launchOptions: {
 			slowMo: 30,

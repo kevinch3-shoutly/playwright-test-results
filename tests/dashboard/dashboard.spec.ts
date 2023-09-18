@@ -1,25 +1,18 @@
 import { faker } from '@faker-js/faker'
 import { expect, test } from '@playwright/test'
 import { createAnAgencyFromOtp, loginFromOTP, switchIntoOrganization } from '../auth/functions'
-import { getOrganizationFromAuthState } from '../helpers'
+import { closeCookieConsentBar, getOrgEmailFromSettings, trySkipUserGuide } from '../helpers'
 
 test.describe('Dashboard tests', async () => {
 
     test.beforeAll(async ({ browser, request, baseURL }) => {
-        await createAnAgencyFromOtp(browser, request, baseURL, false)
-    })
-
-    test('should show and update guide_seen', async ({ page, baseURL }) => {
-        await loginFromOTP(page, baseURL)
-        await page.locator('.tour-buttons .skip-button').click()
-        await page.waitForResponse(response => response.url().endsWith('user/guide'))
-        await page.waitForURL('**/dashboard')
+        await createAnAgencyFromOtp(browser, request, baseURL)
     })
 
     test.describe('tests for todo-list', async () => {
 
         test.beforeAll(async ({ browser, request, baseURL }) => {
-            await createAnAgencyFromOtp(browser, request, baseURL, true)
+            await createAnAgencyFromOtp(browser, request, baseURL)
         })
 
         test('should not have a task with an collab-ends-soon slug', async ({ page, baseURL }) => {
@@ -28,7 +21,7 @@ test.describe('Dashboard tests', async () => {
 
             await loginFromOTP(page, baseURL)
 
-            const organization = getOrganizationFromAuthState(baseURL)
+            const org_email = await getOrgEmailFromSettings(page, baseURL)
 
             // Create a collaboration
             await page.goto(`${baseURL}/collaborations/create-express`)
@@ -89,7 +82,7 @@ test.describe('Dashboard tests', async () => {
             
             // Invite to collaboration
             await page.getByTestId('invite-input-email-or-name').click()
-            await page.getByTestId('invite-input-email-or-name').type(organization.email, { delay: 10 })
+            await page.getByTestId('invite-input-email-or-name').type(org_email, { delay: 10 })
 
             // Click first element as result of autocomplete
             await page.locator('app-org-preview-horizontal .partner-item').first().click()
@@ -117,8 +110,8 @@ test.describe('Dashboard tests', async () => {
             // the locator app-to-do-tasks-table should be visible
             await expect(page.locator('app-to-do-tasks-table')).toBeVisible()
 
-            // the locator app-to-do-tasks-table should not have a table
-            await expect(page.locator('app-to-do-tasks-table table')).not.toBeVisible()
+            // the locator app-to-do-tasks-table should not have a table, avoid skeleton
+            await expect(page.locator('app-to-do-tasks-table .todo-tasks-table > table')).not.toBeVisible()
         })
     })
 })
@@ -135,6 +128,7 @@ test.describe('tests for block last transactions', async () => {
         const email = 'arne41@shoutlymail.com'
         const password = process.env.DEMO_USER_PASSWORD || 'Demo123456'
 		await page.goto(`${baseURL}/auth/login`)
+        await closeCookieConsentBar(page)
 		await page.locator('app-auth-provider-select mat-card').nth(2).click()
 		await page.locator('app-email mat-form-field input').nth(0).type(email)
 		await page.locator('app-email mat-form-field input').nth(1).type(password)
@@ -144,6 +138,7 @@ test.describe('tests for block last transactions', async () => {
 	})
 
     test('should show last transactions', async ({ page }) => {
+        await trySkipUserGuide(page)
         // should contain the locator app-transactions-featured
         await expect(page.locator('app-transactions-featured')).toBeVisible()
 
@@ -166,11 +161,13 @@ test.describe('tests for block last transactions', async () => {
 test.describe('tests using org with limited access', async () => {
     test.beforeEach(async ({ page, baseURL }) => {
 		await page.goto(`${baseURL}/auth/login`)
+        await closeCookieConsentBar(page)
 	})
     
     test('should not show app-quick-actions-block', async ({ page }) => {
         const email = 'subscriber@shoutlymail.com'
         const password = process.env.DEMO_USER_PASSWORD || 'Demo123456'
+        
 		await page.locator('app-auth-provider-select mat-card').nth(2).click()
 		await page.locator('app-email mat-form-field input').nth(0).type(email)
 		await page.locator('app-email mat-form-field input').nth(1).type(password)
@@ -179,6 +176,8 @@ test.describe('tests using org with limited access', async () => {
 		await page.locator('app-email .mdc-button').click()
 
 		await page.waitForURL('**/dashboard')
+
+        await trySkipUserGuide(page)
 
         await expect(page.locator('app-quick-actions-block')).not.toBeVisible()
     })

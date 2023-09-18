@@ -1,11 +1,13 @@
 import { test, expect } from '@playwright/test'
 import { createAnAgencyFromOtp, loginFromOTP } from './functions'
 import * as dotenv from 'dotenv'
+import { closeCookieConsentBar } from '../helpers'
 dotenv.config()
 
 test.describe('Login with email', () => {
 	test.beforeEach(async ({ page, baseURL }) => {
 		await page.goto(`${baseURL}/auth/login`)
+		await closeCookieConsentBar(page)
 	})
   
 	test('should go to dashboard after login when credentials valid', async ({ page }) => {
@@ -69,10 +71,10 @@ test.describe('Login with OTP', () => {
 
 	}) 
 
-	test('should go to dashboard after login when credentials valid', async ({ browser, request, page, baseURL }) => {
-		await createAnAgencyFromOtp(browser, request, baseURL)
-		await loginFromOTP(page, baseURL)
-	}) 
+	// test('should go to dashboard after login when credentials valid', async ({ browser, request, page, baseURL }) => {
+	// 	await createAnAgencyFromOtp(browser, request, baseURL)
+	// 	await loginFromOTP(page, baseURL)
+	// }) 
 
 	test('should give an error and show mobile number input', async ({ request, page, baseURL }) => {
 

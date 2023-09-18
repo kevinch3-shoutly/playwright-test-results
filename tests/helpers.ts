@@ -1,42 +1,54 @@
 import { faker } from '@faker-js/faker'
-import { Page } from '@playwright/test'
+import { Locator, Page } from '@playwright/test'
 import fs from 'fs'
 
 async function scrollDownAgreement(page: Page) {
     const agreementContentDialog = await page.locator('.agreement-dialog-content > .agreement-dialog-content-text')
     const agreementContentDialogBox = await agreementContentDialog.boundingBox() || { height: 0 }
     await page.mouse.wheel(0, (agreementContentDialogBox.height + 100))
-  }
-  
+}
+
 
 export async function handleAgreementAcceptance(page: Page) {
     await scrollDownAgreement(page)
-  
+
     // Button should be enabled
     const elementButtonAcceptAgreement = await page.locator('app-agreement-dialog .mat-mdc-dialog-actions button:nth-child(2)')
     await elementButtonAcceptAgreement.click()
-  
+
     // click accept
-    await page.locator('app-agreement-dialog .mat-mdc-dialog-actions button:nth-child(2)').click()  
+    await page.locator('app-agreement-dialog .mat-mdc-dialog-actions button:nth-child(2)').click()
 
     // wait for page to be loaded
     await page.waitForNavigation({ waitUntil: 'load' })
 }
 
-export function getOrganizationFromAuthState(baseURL){
-    // get authState
-    const authStateJSON = JSON.parse(fs.readFileSync('auth-state.json').toString())
+// export function getOrganizationFromAuthState(baseURL) {
+//     // get authState
+//     const authStateJSON = JSON.parse(fs.readFileSync('auth-state.json').toString())
 
-    // get origins
-    const origins = authStateJSON.origins
+//     // get origins
+//     const origins = authStateJSON.origins
 
-    // get localstorage
-    const local_storage: { name, value }[] = origins.find(item => item.origin === baseURL).localStorage 
-    
-    // get organization
-    let organization = local_storage.find(item => item.name === 'organization')?.value || '{}'
+//     // get localstorage
+//     const local_storage: { name, value }[] = origins.find(item => item.origin === baseURL).localStorage
 
-    return organization = JSON.parse(organization)
+//     // get organization
+//     let organization = local_storage.find(item => item.name === 'organization')?.value || '{}'
+
+//     return organization = JSON.parse(organization)
+// }
+
+// export async function getOrgEmailFromSettings(page: Page): Promise<string> {
+//     await page.goto(`${baseURL}/settings?tab=org`)
+//     return await page.getByTestId('org_email')
+// }
+
+export async function getOrgEmailFromSettings(page: Page, baseURL): Promise<string> {
+    await page.goto(`${baseURL}/settings?tab=org`)
+    const emailInputLocator: Locator = await page.getByTestId('org_email')
+    const email = await emailInputLocator.inputValue()
+    return email
 }
 
 export function lastDayOfNextMonth(date: Date) {
@@ -45,7 +57,7 @@ export function lastDayOfNextMonth(date: Date) {
     const lastDayOfNextMonthString = lastDayOfNextMonth.toISOString().slice(0, 10)
     return lastDayOfNextMonthString
 }
-export interface csvInput { 
+export interface csvInput {
     'Name': string
     'Email': string
     'Hours': string
@@ -58,15 +70,15 @@ export interface csvInput {
 
 function arrayToCsv(data: object[]): string {
     if (data.length === 0) return ''
-  
+
     const header = Object.keys(data[0]).join(',') + '\n'
     const rows = data.map(row => Object.values(row).join(',')).join('\n')
-  
+
     return header + rows
 }
 
-export function createCsv (data: csvInput[]) {
-     // Convert data to CSV
+export function createCsv(data: csvInput[]) {
+    // Convert data to CSV
     const csvData = arrayToCsv(data)
 
     // Convert the CSV data to a Buffer
@@ -80,12 +92,34 @@ export function createCsv (data: csvInput[]) {
     }
 }
 
-export function generateRandomTitles (length: number): string[] {
+export function generateRandomTitles(length: number): string[] {
     const result: string[] = []
 
-    for (let i = 0; i < length; i++) {
+    for (let i = 0 ; i < length ; i++) {
         result.push(faker.random.alphaNumeric(12))
     }
 
     return result
 }
+
+export async function trySkipUserGuide(page: Page) {
+    try {
+        await page.locator('.tour-buttons .skip-button').waitFor({ state: 'visible', timeout: 5000 })
+        await page.locator('.tour-buttons .skip-button').click()
+    } catch (error) {
+        console.log("Skip button did not appear in time, proceeding with the test.")
+    }
+}
+
+
+export async function closeCookieConsentBar(page: Page) {
+    try {
+        const closeButton = page.locator('app-cookie-consent .cookie-banner .buttons-wrapper button[fs-cc="allow"]')
+        await closeButton.waitFor({ state: 'visible', timeout: 5000 })
+        await page.waitForTimeout(100)
+        await closeButton.click()
+    } catch (error) {
+      console.log("Cookie consent bar did not appear in time, proceeding with the test.")
+    }
+  }
+  

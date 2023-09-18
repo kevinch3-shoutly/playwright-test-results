@@ -1,6 +1,6 @@
 import { faker } from '@faker-js/faker'
 import { expect, Page } from '@playwright/test'
-import { handleAgreementAcceptance } from '../helpers'
+import { closeCookieConsentBar, handleAgreementAcceptance, trySkipUserGuide } from '../helpers'
 import * as dotenv from 'dotenv'
 dotenv.config()
 
@@ -174,7 +174,7 @@ export async function fillOrgSettings(page: Page, currency = 'EUR', orgType = 'g
 	await page.locator('input[formcontrolname="vat_number"]').fill('SE559219259401')
 }
 
-export async function createAnAgencyFromOtp(browser, request, baseURL, skipUserGuide = true){
+export async function createAnAgencyFromOtp(browser, request, baseURL){
 		let page: Page
 
 		// eslint-disable-next-line prefer-const
@@ -185,6 +185,8 @@ export async function createAnAgencyFromOtp(browser, request, baseURL, skipUserG
 		expect(response.ok()).toBeTruthy()
 
 		await page.goto(`${baseURL}/auth/signup`)
+
+		await closeCookieConsentBar(page)
 
 		// Select org type
 		await page.locator(`.org-type-select.${orgType}`).click()
@@ -219,16 +221,14 @@ export async function createAnAgencyFromOtp(browser, request, baseURL, skipUserG
 		await page.getByRole('button', { name: 'Submit' }).click()
 		await page.waitForURL('**/dashboard?onboardvideo=true')
 
-		if (skipUserGuide){
-			await page.locator('.tour-buttons .skip-button').click()
-			await page.waitForResponse(r => r.url().endsWith('user/guide'))
-		}
+		await trySkipUserGuide(page)
 		
 		await page.context().storageState({ path: 'auth-state.json' })
 }
 
 export async function loginFromOTP(page, baseURL) {
 	await page.goto(`${baseURL}/auth/login`)
+	await closeCookieConsentBar(page)
 	await page.locator('app-auth-provider-select mat-card h3').nth(1).click()
 	await page.locator('input[formcontrolname="suffixPhone"]').type(phoneNumber)
 	await page.locator('app-otp button[type="submit"].mat-button-disabled').waitFor({ state: 'hidden' })

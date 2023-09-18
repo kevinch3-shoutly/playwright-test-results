@@ -1,5 +1,5 @@
 import { expect, test } from '@playwright/test'
-import { createCsv, csvInput, generateRandomTitles } from '../helpers'
+import { createCsv, csvInput, generateRandomTitles, trySkipUserGuide } from '../helpers'
 
 test.beforeEach(async ({ baseURL, page }) => {
     /** THIS REQUIRES BACKEND BILLING SETTING: csv_import TO BE 1 */
@@ -17,11 +17,7 @@ test.beforeEach(async ({ baseURL, page }) => {
 
     await page.waitForURL('**/dashboard')
 
-    const skipUserGuide = await page.locator('.tour-buttons .skip-button').isVisible()
-
-    if (skipUserGuide){
-        await page.locator('.tour-buttons .skip-button').click()
-    }
+    await trySkipUserGuide(page)
 })
 
 test.describe('Spreadsheet upload', () => {

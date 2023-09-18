@@ -3,18 +3,14 @@ import { AuthPage } from '../../src/PageObjects/AuthPage'
 import { test, expect } from '@playwright/test'
 import { faker } from '@faker-js/faker'
 import * as dotenv from 'dotenv'
+import { closeCookieConsentBar } from '../helpers'
 dotenv.config()
 
 test.describe('Create accounts', async () => {
 
-	let page
-
-	test.beforeEach(async ({context, baseURL}) => {
-	  page = await context.newPage();
-	  // Navigate to your website
-	  await page.goto(baseURL + '/auth/login')
-	  // Assuming there's a button to accept cookies, click it
-	  await page.locator('app-cookie-consent button').nth(2).click()
+	test.beforeEach(async ({ page, baseURL }) => {
+		await page.goto(`${baseURL}/auth/login`)
+		await closeCookieConsentBar(page)
 	})
 
 	test.describe('Tests for email passwords', () => {
