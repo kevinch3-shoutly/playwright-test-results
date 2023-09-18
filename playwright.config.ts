@@ -5,6 +5,10 @@ dotenv.config()
 let reporter: ReporterDescription[] = [
 	['junit', {
 		outputFile: 'test-results/test-results.xml'
+	}],
+	['html', {
+		outputFolder: 'test-html-report',
+		open: 'never'
 	}]
 ]
 
@@ -32,11 +36,10 @@ const config: PlaywrightTestConfig = {
 		launchOptions: {
 			slowMo: 30,
 		},
-		trace: 'on-first-retry',
+		trace: 'on',
 		screenshot: "only-on-failure",
 	},
 	workers: 1,
-	
 	timeout: parseInt(process.env.TIMEOUT ?? '30000'),
 	retries: parseInt(process.env.RETRIES ?? '0'),
 	expect: { timeout: 25000 },

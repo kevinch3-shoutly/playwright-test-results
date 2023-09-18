@@ -1,5 +1,5 @@
 import { expect, test } from '@playwright/test'
-import { createCsv, csvInput, generateRandomTitles, trySkipUserGuide } from '../helpers'
+import { closeCookieConsentBar, createCsv, csvInput, generateRandomTitles, trySkipUserGuide } from '../helpers'
 
 test.beforeEach(async ({ baseURL, page }) => {
     /** THIS REQUIRES BACKEND BILLING SETTING: csv_import TO BE 1 */
@@ -7,6 +7,7 @@ test.beforeEach(async ({ baseURL, page }) => {
     const password = 'Demo123456'
 
     await page.goto(`${baseURL}/auth/login`)
+    await closeCookieConsentBar(page)
     
     await page.locator('app-auth-provider-select mat-card').nth(2).click()
     await page.locator('app-email mat-form-field input').nth(0).type(email)
