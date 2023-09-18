@@ -1,6 +1,18 @@
+# Use the latest Node.js image
 FROM node:latest
+
+# Set the working directory
 WORKDIR /usr/src/app
+
+# Copy package files and install dependencies
 COPY package*.json ./
 RUN npm ci
+
+# Install Playwright and Chromium
 RUN npx playwright install --with-deps chromium
+
+# Create the test-html-report directory
+RUN mkdir -p /usr/src/app/test-html-report
+
+# Copy remaining project files
 COPY . .
