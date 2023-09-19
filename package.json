@@ -4,7 +4,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "lint": "eslint"
+    "lint": "eslint",
+    "publish-tests": "node publish-tests.js"
   },
   "repository": {
     "type": "git",
@@ -23,10 +24,13 @@
     "@types/dotenv": "^8.2.0",
     "@typescript-eslint/eslint-plugin": "^5.62.0",
     "@typescript-eslint/parser": "^5.62.0",
-    "eslint": "^8.32.0"
+    "eslint": "^8.32.0",
+    "gh-pages": "^6.0.0"
   },
+  "type": "module",
   "dependencies": {
     "@faker-js/faker": "^7.6.0",
+    "aws-sdk": "^2.1460.0",
     "dotenv": "^16.0.3",
     "playwright-slack-report": "^1.1.23"
   }

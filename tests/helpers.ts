@@ -1,6 +1,5 @@
 import { faker } from '@faker-js/faker'
 import { Locator, Page } from '@playwright/test'
-import fs from 'fs'
 
 async function scrollDownAgreement(page: Page) {
     const agreementContentDialog = await page.locator('.agreement-dialog-content > .agreement-dialog-content-text')

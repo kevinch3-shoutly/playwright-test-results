@@ -12,7 +12,7 @@ let reporter: ReporterDescription[] = [
 	}]
 ]
 
-if (process.env.SHOULD_USE_SLACK_REPORTER === 'true') {
+if (!!process.env.SLACK_BOT_USER_OAUTH_TOKEN) {
 	reporter.push([
 		'./node_modules/playwright-slack-report/dist/src/SlackReporter.js',
 		{
